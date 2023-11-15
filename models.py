@@ -1,6 +1,9 @@
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 from flask_login import UserMixin
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired, Email, EqualTo, Length
 import os
 
 load_dotenv()
@@ -35,6 +38,15 @@ class Models:
             f"{db_config['DB_HOST']}:{db_config['DB_PORT']}/{db_config['DB_NAME']}"
         )
 
+class RegistrationForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email(), Length(max=30)])
+    full_name = StringField('Full Name', validators=[Length(max=80)])
+    nickname = StringField('Nickname', validators=[Length(max=30)])
+    phone_number = StringField('Phone Number', validators=[Length(max=20)])
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    bio = StringField('Bio')
+    submit = SubmitField('Register')
 
 # Entity Database
 class User(db.Model, UserMixin):

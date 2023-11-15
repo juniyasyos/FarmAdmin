@@ -1,0 +1,108 @@
+{% extends 'public/html/base.html' %}
+
+{% block title %} FarmAdmin | Profile {% endblock %}
+
+{% block profile_info %}
+<a class="profile-pic" href="#">
+    <img src="../static/plugins/images/users/varun.jpg" alt="user-img" width="36"
+        class="img-circle">
+    <span class="text-white font-medium">Muhammad Rizky Ramdhani</span>
+</a>
+{% endblock %}
+
+{% block path %} Profil {% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- ============================================================== -->
+    <!-- Start Page Content -->
+    <!-- ============================================================== -->
+    <!-- Row -->
+    <div class="row">
+        <!-- Column -->
+        <div class="col-lg-4 col-xlg-3 col-md-12">
+            <div class="white-box">
+                <div class="user-bg"> <img width="100%" alt="user"
+                        src="../static/plugins/images/large/img1.jpg">
+                    <div class="overlay-box">
+                        <div class="user-content">
+                            <a href="javascript:void(0)"><img src="../static/plugins/images/users/genu.jpg"
+                                    class="thumb-lg img-circle" alt="img"></a>
+                            <h4 class="text-white mt-2">User Name</h4>
+                            <h5 class="text-white mt-2">email123.com</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-btm-box mt-5 d-md-flex">
+                    <div class="col-md-4 col-sm-4 text-center">
+                        <h2>+62</h2>
+                    </div>
+                    <div class="col-md-4 col-sm-4 text-center">
+                        <h2>812891</h2>
+                    </div>
+                    <div class="col-md-4 col-sm-4 text-center">
+                        <h2>27749</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Column -->
+        <!-- Column -->
+        <div class="col-lg-8 col-xlg-9 col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <form class="form-horizontal form-material">
+                        <div class="form-group mb-4">
+                            <label class="col-md-12 p-0">Full Name</label>
+                            <div class="col-md-12 border-bottom p-0">
+                                <input type="text" placeholder="Muhammad Rizky"
+                                    class="form-control p-0 border-0">
+                            </div>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="exfarm-email" class="col-md-12 p-0">Email</label>
+                            <div class="col-md-12 border-bottom p-0">
+                                <input type="email" placeholder="rizkyganteng123@gmail.com"
+                                    class="form-control p-0 border-0" name="exfarm-email" id="exfarm-email">
+                            </div>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label class="col-md-12 p-0">Password</label>
+                            <div class="col-md-12 border-bottom p-0">
+                                <input type="password" value="password" class="form-control p-0 border-0">
+                            </div>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label class="col-md-12 p-0">Phone</label>
+                            <div class="col-md-12 border-bottom p-0">
+                                <input type="text" placeholder="123 456 7890"
+                                    class="form-control p-0 border-0">
+                            </div>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label class="col-md-12 p-0">Bio</label>
+                            <div class="col-md-12 border-bottom p-0">
+                                <textarea rows="5" class="form-control p-0 border-0"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group mb-4">
+                            <div class="form-group mb-4">
+                                <label for="exfarm-email" class="col-md-12 p-0">Provinsi</label>
+                                <div class="col-md-12 border-bottom p-0">
+                                    <input type="text" class="form-control p-0 border-0" name="exfarm-email"
+                                        id="exfarm-email">
+                                </div>
+                            </div>
+                            <div class="form-group mb-4">
+                                <div class="col-sm-12">
+                                    <button class="btn btn-success">Update Profile</button>
+                                </div>
+                            </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

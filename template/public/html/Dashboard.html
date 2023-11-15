@@ -1,455 +1,351 @@
-<!DOCTYPE html>
-<html dir="ltr" lang="en">
+{% extends 'public/html/base.html' %}
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!-- Tell the browser to be responsive to screen width -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="keywords"
-        content="wrappixel, admin dashboard, html css dashboard, web dashboard, bootstrap 5 admin, bootstrap 5, css3 dashboard, bootstrap 5 dashboard, Ample lite admin bootstrap 5 dashboard, frontend, responsive bootstrap 5 admin template, Ample admin lite dashboard bootstrap 5 dashboard template">
-    <meta name="description"
-        content="Ample Admin Lite is powerful and clean admin dashboard template, inpired from Bootstrap Framework">
-    <meta name="robots" content="noindex,nofollow">
-    <title>Farm Admin</title>
-    <link rel="canonical" href="https://www.wrappixel.com/templates/ample-admin-lite/" />
-    <link rel="icon" type="image/png" sizes="16x16" href="../static/plugins/images/favicon.png">
-    <link href="../static/plugins/bower_components/chartist/dist/chartist.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../static/plugins/bower_components/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.css">
-    <link href="../static/css/style.min.css" rel="stylesheet">
-</head>
+{% block title %} FarmAdmin/Dashboard {% endblock %}
 
-<body>
-    <div class="preloader">
-        <div class="lds-ripple">
-            <div class="lds-pos"></div>
-            <div class="lds-pos"></div>
+{% block profile_info %}
+<a class="profile-pic" href="#">
+    <img src="../static/plugins/images/users/varun.jpg" alt="user-img" width="36"
+        class="img-circle">
+    <span class="text-white font-medium">Muhammad Rizky Ramdhani</span>
+</a>
+{% endblock %}
+
+{% block path %} Beranda {% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-3 col-md-12">
+            <div class="white-box analytics-info">
+                <h3 class="box-title">Jumlah Lahan</h3>
+                <ul class="list-inline two-part d-flex align-items-center mb-0">
+                    <li>
+                        <div id="sparklinedash"><canvas width="67" height="30"
+                                style="display: inline-block; width: 67px; height: 30px; vertical-align: top;"></canvas>
+                        </div>
+                    </li>
+                    <li class="ms-auto"><span class="counter text-purple">6</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-12">
+            <div class="white-box analytics-info">
+                <h3 class="box-title">Jumlah Panen</h3>
+                <ul class="list-inline two-part d-flex align-items-center mb-0">
+                    <li>
+                        <div id="sparklinedash2"><canvas width="67" height="30"
+                                style="display: inline-block; width: 67px; height: 30px; vertical-align: top;"></canvas>
+                        </div>
+                    </li>
+                    <li class="ms-auto"><span class="counter text-purple">176.500.000</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-12">
+            <div class="white-box analytics-info">
+                <h3 class="box-title">Total Pendapatan</h3>
+                <ul class="list-inline two-part d-flex align-items-center mb-0">
+                    <li>
+                        <div id="sparklinedash3"><canvas width="67" height="30"
+                                style="display: inline-block; width: 67px; height: 30px; vertical-align: top;"></canvas>
+                        </div>
+                    </li>
+                    <li class="ms-auto"><span class="counter text-info">10.xxx.xxx.xxx</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-12">
+            <div class="white-box analytics-info">
+                <h3 class="box-title">Total Pengeluaran</h3>
+                <ul class="list-inline two-part d-flex align-items-center mb-0">
+                    <li>
+                        <div id="sparklinedash3"><canvas width="67" height="30"
+                                style="display: inline-block; width: 67px; height: 30px; vertical-align: top;"></canvas>
+                        </div>
+                    </li>
+                    <li class="ms-auto"><span class="counter text-info">13.xxx.xxx.xxx</span>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
-    <div id="main-wrapper" data-layout="vertical" data-navbarbg="skin5" data-sidebartype="full"
-        data-sidebar-position="absolute" data-header-position="absolute" data-boxed-layout="full">
-        <header class="topbar" data-navbarbg="skin5">
-            <nav class="navbar top-navbar navbar-expand-md navbar-dark">
-                <div class="navbar-header position-fixed" data-logobg="skin6">
-                    <a class="navbar-brand" href="dashboard.html">
-                        <b class="logo-icon">
-                            <img src="../static/plugins/images/logo-icon.png" alt="homepage" />
-                        </b>
-                        <span class="logo-text">
-                            <img src="../static/plugins/images/logo-text.png" alt="homepage" />
-                        </span>
-                    </a>
-                    <a class="nav-toggler waves-effect waves-light text-dark d-block d-md-none"
-                        href="javascript:void(0)"><i class="ti-menu ti-close"></i></a>
-                </div>
-                <div class="navbar-collapse collapse" id="navbarSupportedContent" data-navbarbg="skin5">
-                    <ul class="navbar-nav ms-auto d-flex align-items-center">
-                        <li class=" in">
-                            <form role="search" class="app-search d-none d-md-block me-3">
-                                <input type="text" placeholder="Search..." class="form-control mt-0">
-                                <a href="" class="active">
-                                    <i class="fa fa-search"></i>
-                                </a>
-                            </form>
+    <!-- ============================================================== -->
+    <!-- STATISTIK LAHAN -->
+    <!-- ============================================================== -->
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+            <div class="white-box">
+                <h3 class="box-title">Statistik Lahan</h3>
+                <div class="d-md-flex">
+                    <ul class="list-inline d-flex ms-auto">
+                        <li class="ps-3">
+                            <h5><i class="fa fa-circle me-1 text-info"></i><a class="text-black-50"
+                                    href="#">Lahan 1</a></h5>
                         </li>
-                        <li>
-                            <a class="profile-pic" href="#">
-                                <img src="../static/plugins/images/users/varun.jpg" alt="user-img" width="36"
-                                    class="img-circle">
-                                <span class="text-white font-medium">Muhammad Rizky Ramdhani</span>
-                            </a>
+                        <li class="ps-3">
+                            <h5><i class="fa fa-circle me-1 text-inverse"></i><a class="text-black-50"
+                                    href="#">Lahan 2</a></h5>
+                        </li>
+                        <li class="ps-3">
+                            <h5><i class="fa fa-circle me-1 text-warning"></i><a class="text-black-50"
+                                    href="#">Lahan 3</a></h5>
+                        </li>
+                        <li class="ps-3">
+                            <h5><i class="fa fa-circle me-1 text-danger"></i><a class="text-black-50"
+                                    href="#">Lahan 4</a></h5>
+                        </li>
+                        <li class="ps-3">
+                            <h5><i class="fa fa-circle me-1 text-success"></i><a class="text-black-50"
+                                    href="#">Lahan 5</a></h5>
                         </li>
                     </ul>
                 </div>
-            </nav>
-        </header>
-        <aside class="left-sidebar position-fixed" data-sidebarbg="skin6">
-            <div class="scroll-sidebar">
-                <nav class="sidebar-nav">
-                    <ul id="sidebarnav">
-                        <li class="sidebar-item pt-2">
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="dashboard.html"
-                                aria-expanded="false">
-                                <i class="far fa-clock" aria-hidden="true"></i>
-                                <span class="hide-menu">Dashboard<span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="profile.html"
-                                aria-expanded="false">
-                                <i class="fa fa-user" aria-hidden="true"></i>
-                                <span class="hide-menu">Profile</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="blank.html"
-                                aria-expanded="false">
-                                <i class="fa fa-columns" aria-hidden="true"></i>
-                                <span class="hide-menu">Manajemen Lahan</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </aside>
-        <div class="page-wrapper">
-            <div class="page-breadcrumb bg-white">
-                <div class="row align-items-center">
-                    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                        <h1 class="page-title">Beranda</h1>
-                    </div>
-                    <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+                <div id="ct-visits" style="height: 50vh;">
+                    <div class="chartist-tooltip" style="top: -17px; left: -12px;"><span
+                            class="chartist-tooltip-value">6</span>
                     </div>
                 </div>
             </div>
-            <div class="container-fluid">
-                <div class="row justify-content-center">
-                    <div class="col-lg-3 col-md-12">
-                        <div class="white-box analytics-info">
-                            <h3 class="box-title">Jumlah Lahan</h3>
-                            <ul class="list-inline two-part d-flex align-items-center mb-0">
-                                <li>
-                                    <div id="sparklinedash"><canvas width="67" height="30"
-                                            style="display: inline-block; width: 67px; height: 30px; vertical-align: top;"></canvas>
-                                    </div>
-                                </li>
-                                <li class="ms-auto"><span class="counter text-purple">6</span></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-12">
-                        <div class="white-box analytics-info">
-                            <h3 class="box-title">Jumlah Panen</h3>
-                            <ul class="list-inline two-part d-flex align-items-center mb-0">
-                                <li>
-                                    <div id="sparklinedash2"><canvas width="67" height="30"
-                                            style="display: inline-block; width: 67px; height: 30px; vertical-align: top;"></canvas>
-                                    </div>
-                                </li>
-                                <li class="ms-auto"><span class="counter text-purple">176.500.000</span></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-12">
-                        <div class="white-box analytics-info">
-                            <h3 class="box-title">Total Pendapatan</h3>
-                            <ul class="list-inline two-part d-flex align-items-center mb-0">
-                                <li>
-                                    <div id="sparklinedash3"><canvas width="67" height="30"
-                                            style="display: inline-block; width: 67px; height: 30px; vertical-align: top;"></canvas>
-                                    </div>
-                                </li>
-                                <li class="ms-auto"><span class="counter text-info">10.xxx.xxx.xxx</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-12">
-                        <div class="white-box analytics-info">
-                            <h3 class="box-title">Total Pengeluaran</h3>
-                            <ul class="list-inline two-part d-flex align-items-center mb-0">
-                                <li>
-                                    <div id="sparklinedash3"><canvas width="67" height="30"
-                                            style="display: inline-block; width: 67px; height: 30px; vertical-align: top;"></canvas>
-                                    </div>
-                                </li>
-                                <li class="ms-auto"><span class="counter text-info">13.xxx.xxx.xxx</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- ============================================================== -->
-                <!-- STATISTIK LAHAN -->
-                <!-- ============================================================== -->
-                <div class="row">
-                    <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
-                        <div class="white-box">
-                            <h3 class="box-title">Statistik Lahan</h3>
-                            <div class="d-md-flex">
-                                <ul class="list-inline d-flex ms-auto">
-                                    <li class="ps-3">
-                                        <h5><i class="fa fa-circle me-1 text-info"></i><a class="text-black-50"
-                                                href="#">Lahan 1</a></h5>
-                                    </li>
-                                    <li class="ps-3">
-                                        <h5><i class="fa fa-circle me-1 text-inverse"></i><a class="text-black-50"
-                                                href="#">Lahan 2</a></h5>
-                                    </li>
-                                    <li class="ps-3">
-                                        <h5><i class="fa fa-circle me-1 text-warning"></i><a class="text-black-50"
-                                                href="#">Lahan 3</a></h5>
-                                    </li>
-                                    <li class="ps-3">
-                                        <h5><i class="fa fa-circle me-1 text-danger"></i><a class="text-black-50"
-                                                href="#">Lahan 4</a></h5>
-                                    </li>
-                                    <li class="ps-3">
-                                        <h5><i class="fa fa-circle me-1 text-success"></i><a class="text-black-50"
-                                                href="#">Lahan 5</a></h5>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div id="ct-visits" style="height: 50vh;">
-                                <div class="chartist-tooltip" style="top: -17px; left: -12px;"><span
-                                        class="chartist-tooltip-value">6</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- ============================================================== -->
-                <!-- AKTIVITAS HARIAN 2-->
-                <!-- ============================================================== -->
-                <div class="row">
-                    <div class="col-md-12 col-lg-12 col-sm-12">
-                        <div class="white-box">
-                            <div class="d-md-flex mb-3">
-                                <h3 class="box-title mb-0">Jadwal Aktivitas Terdekat</h3>
-                                <div class="col-md-3 col-sm-4 col-xs-6 ms-auto">
-                                    <select class="form-select shadow-none row border-top">
-                                        <option>Semua Lahan</option>
-                                        <option>Lahan 1 </option>
-                                        <option>Lahan 2 </option>
-                                        <option>Lahan 3 </option>
-                                        <option>Lahan 4 </option>
-                                        <option>Lahan 5 </option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table no-wrap">
-                                    <thead>
-                                        <tr>
-                                            <th class="border-top-0">Nomor</th>
-                                            <th class="border-top-0">Tanggal</th>
-                                            <th class="border-top-0">Aktivitas</th>
-                                            <th class="border-top-0">Status</th>
-                                            <th class="border-top-0">Keterangan</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>2023-11-13</td>
-                                            <td>Membaca</td>
-                                            <td><input type="checkbox" checked></td>
-                                            <td>Menyelesaikan buku favorit</td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>2023-11-14</td>
-                                            <td>Olahraga</td>
-                                            <td><input type="checkbox"></td>
-                                            <td>Melakukan jogging selama 30 menit</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>2023-11-15</td>
-                                            <td>Belajar</td>
-                                            <td><input type="checkbox" checked></td>
-                                            <td>Mempelajari pemrograman web</td>
-                                        </tr>
-                                        <tr>
-                                            <td>4</td>
-                                            <td>2023-11-16</td>
-                                            <td>Rapat Kerja</td>
-                                            <td><input type="checkbox"></td>
-                                            <td>Membahas proyek terkini</td>
-                                        </tr>
-                                        <tr>
-                                            <td>5</td>
-                                            <td>2023-11-17</td>
-                                            <td>Berkumpul dengan Teman</td>
-                                            <td><input type="checkbox" checked></td>
-                                            <td>Makan malam bersama teman-teman</td>
-                                        </tr>
-                                        <tr>
-                                            <td>6</td>
-                                            <td>2023-11-18</td>
-                                            <td>Liburan</td>
-                                            <td><input type="checkbox"></td>
-                                            <td>Merencanakan perjalanan liburan</td>
-                                        </tr>
-                                        <tr>
-                                            <td>7</td>
-                                            <td>2023-11-19</td>
-                                            <td>Membaca</td>
-                                            <td><input type="checkbox" checked></td>
-                                            <td>Membaca artikel tentang teknologi</td>
-                                        </tr>
-                                        <tr>
-                                            <td>8</td>
-                                            <td>2023-11-20</td>
-                                            <td>Olahraga</td>
-                                            <td><input type="checkbox"></td>
-                                            <td>Senam pagi selama 20 menit</td>
-                                        </tr>
-                                    </tbody>
-
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- ============================================================== -->
-                <!-- TOTAL PENDAPATAN -->
-                <!-- ============================================================== -->
-                <div class="row">
-                    <div class="col-md-12 col-lg-12 col-sm-12">
-                        <div class="white-box">
-                            <div class="d-md-flex mb-3">
-                                <h3 class="box-title mb-0">Total Pendapatan</h3>
-                                <div class="col-md-3 col-sm-4 col-xs-6 ms-auto">
-                                    <select class="form-select shadow-none row border-top">
-                                        <option>Januari 2023</option>
-                                        <option>Februari 2023</option>
-                                        <option>Maret 2023</option>
-                                        <option>April 2023</option>
-                                        <option>Mei 2023</option>
-                                        <option>Juni 2023</option>
-                                        <option>Juli 2023</option>
-                                        <option>Agustus 2023</option>
-                                        <option>September 2023</option>
-                                        <option>Oktober 2023</option>
-                                        <option>November 2023</option>
-                                        <option>Desember 2023</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table no-wrap">
-                                    <thead>
-                                        <tr>
-                                            <th class="border-top-0">Nomor</th>
-                                            <th class="border-top-0">Tanggal</th>
-                                            <th class="border-top-0">Nama Barang</th>
-                                            <th class="border-top-0">Harga</th>
-                                            <th class="border-top-0">Jumlah (kwintal)</th>
-                                            <th class="border-top-0">Total</th>
-                                            <th class="border-top-0">Keterangan</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td class="txt-oflo">26 Januari</td>
-                                            <td>Cabai</td>
-                                            <td><span class="txt-success">700.000</span></td>
-                                            <td><span class="txt-oflo">2 </span></td>
-                                            <td><span class="txt-oflo">1.400.000</span></td>
-                                            <td><span class="txt-oflo">Terjual</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- ============================================================== -->
-                <!-- TOTAL PENGELUARAN -->
-                <!-- ============================================================== -->
-                <div class="row">
-                    <div class="col-md-12 col-lg-12 col-sm-12">
-                        <div class="white-box">
-                            <div class="d-md-flex mb-3">
-                                <h3 class="box-title mb-0">Total Pengeluaran</h3>
-                                <div class="col-md-3 col-sm-4 col-xs-6 ms-auto">
-                                    <select class="form-select shadow-none row border-top">
-                                        <option>Januari 2023</option>
-                                        <option>Februari 2023</option>
-                                        <option>Maret 2023</option>
-                                        <option>April 2023</option>
-                                        <option>Mei 2023</option>
-                                        <option>Juni 2023</option>
-                                        <option>Juli 2023</option>
-                                        <option>Agustus 2023</option>
-                                        <option>September 2023</option>
-                                        <option>Oktober 2023</option>
-                                        <option>November 2023</option>
-                                        <option>Desember 2023</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table no-wrap">
-                                    <thead>
-                                        <tr>
-                                            <th class="border-top-0">Nomor</th>
-                                            <th class="border-top-0">Tanggal</th>
-                                            <th class="border-top-0">Barang</th>
-                                            <th class="border-top-0">Harga</th>
-                                            <th class="border-top-0">Jumlah (kwintal)</th>
-                                            <th class="border-top-0">Total</th>
-                                            <th class="border-top-0">Keterangan</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td class="txt-oflo">26 Januari</td>
-                                            <td>Cabai</td>
-                                            <td><span class="txt-success">350.000</span></td>
-                                            <td><span class="txt-oflo">2 </span></td>
-                                            <td><span class="txt-oflo">700.000</span></td>
-                                            <td><span class="txt-oflo">Sudah Lunas</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td class="txt-oflo">23 Januari</td>
-                                            <td>Ganja</td>
-                                            <td><span class="txt-success">30.000.000</span></td>
-                                            <td><span class="txt-oflo">4 </span></td>
-                                            <td><span class="txt-oflo">120.000.000</span></td>
-                                            <td><span class="txt-oflo">Lunas sebagian</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td class="txt-oflo">9 Januari</td>
-                                            <td>Timun</td>
-                                            <td><span class="txt-success">500.000</span></td>
-                                            <td><span class="txt-oflo">5 </span></td>
-                                            <td><span class="txt-oflo">2.500.000</span></td>
-                                            <td><span class="txt-oflo">Sudah Lunas</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>4</td>
-                                            <td class="txt-oflo">10 Januari</td>
-                                            <td>Padi</td>
-                                            <td><span class="txt-success">1.500.000</span></td>
-                                            <td><span class="txt-oflo">2 </span></td>
-                                            <td><span class="txt-oflo">3.000.000</span></td>
-                                            <td><span class="txt-oflo">Sudah Lunas</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>4</td>
-                                            <td class="txt-oflo">11 Januari</td>
-                                            <td>Jagung</td>
-                                            <td><span class="txt-success">2.000.000</span></td>
-                                            <td><span class="txt-oflo">2 </span></td>
-                                            <td><span class="txt-oflo">4.000.000</span></td>
-                                            <td><span class="txt-oflo">Sudah Lunas</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <footer class="footer text-center"> 2023 © Kelompok 10 Functional Programming <a href="#">FARMADMIN.com</a>
-            </footer>
         </div>
     </div>
-    <script src="../static/plugins/bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="../static/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../static/js/app-style-switcher.js"></script>
-    <script src="../static/plugins/bower_components/jquery-sparkline/jquery.sparkline.min.js"></script>
-    <script src="../static/js/waves.js"></script>
-    <script src="../static/js/sidebarmenu.js"></script>
-    <script src="../static/js/custom.js"></script>
-    <script src="../static/plugins/bower_components/chartist/dist/chartist.min.js"></script>
-    <script src="../static/plugins/bower_components/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js"></script>
-    <script src="../static/js/pages/dashboards/dashboard1.js"></script>
-</body>
-</html>
+    <!-- ============================================================== -->
+    <!-- AKTIVITAS HARIAN 2-->
+    <!-- ============================================================== -->
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="white-box">
+                <div class="d-md-flex mb-3">
+                    <h3 class="box-title mb-0">Jadwal Aktivitas Terdekat</h3>
+                    <div class="col-md-3 col-sm-4 col-xs-6 ms-auto">
+                        <select class="form-select shadow-none row border-top">
+                            <option>Semua Lahan</option>
+                            <option>Lahan 1 </option>
+                            <option>Lahan 2 </option>
+                            <option>Lahan 3 </option>
+                            <option>Lahan 4 </option>
+                            <option>Lahan 5 </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table no-wrap">
+                        <thead>
+                            <tr>
+                                <th class="border-top-0">Nomor</th>
+                                <th class="border-top-0">Tanggal</th>
+                                <th class="border-top-0">Aktivitas</th>
+                                <th class="border-top-0">Status</th>
+                                <th class="border-top-0">Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>2023-11-13</td>
+                                <td>Membaca</td>
+                                <td><input type="checkbox" checked></td>
+                                <td>Menyelesaikan buku favorit</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>2023-11-14</td>
+                                <td>Olahraga</td>
+                                <td><input type="checkbox"></td>
+                                <td>Melakukan jogging selama 30 menit</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>2023-11-15</td>
+                                <td>Belajar</td>
+                                <td><input type="checkbox" checked></td>
+                                <td>Mempelajari pemrograman web</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>2023-11-16</td>
+                                <td>Rapat Kerja</td>
+                                <td><input type="checkbox"></td>
+                                <td>Membahas proyek terkini</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>2023-11-17</td>
+                                <td>Berkumpul dengan Teman</td>
+                                <td><input type="checkbox" checked></td>
+                                <td>Makan malam bersama teman-teman</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>2023-11-18</td>
+                                <td>Liburan</td>
+                                <td><input type="checkbox"></td>
+                                <td>Merencanakan perjalanan liburan</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>2023-11-19</td>
+                                <td>Membaca</td>
+                                <td><input type="checkbox" checked></td>
+                                <td>Membaca artikel tentang teknologi</td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>2023-11-20</td>
+                                <td>Olahraga</td>
+                                <td><input type="checkbox"></td>
+                                <td>Senam pagi selama 20 menit</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- TOTAL PENDAPATAN -->
+    <!-- ============================================================== -->
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="white-box">
+                <div class="d-md-flex mb-3">
+                    <h3 class="box-title mb-0">Total Pendapatan</h3>
+                    <div class="col-md-3 col-sm-4 col-xs-6 ms-auto">
+                        <select class="form-select shadow-none row border-top">
+                            <option>Januari 2023</option>
+                            <option>Februari 2023</option>
+                            <option>Maret 2023</option>
+                            <option>April 2023</option>
+                            <option>Mei 2023</option>
+                            <option>Juni 2023</option>
+                            <option>Juli 2023</option>
+                            <option>Agustus 2023</option>
+                            <option>September 2023</option>
+                            <option>Oktober 2023</option>
+                            <option>November 2023</option>
+                            <option>Desember 2023</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table no-wrap">
+                        <thead>
+                            <tr>
+                                <th class="border-top-0">Nomor</th>
+                                <th class="border-top-0">Tanggal</th>
+                                <th class="border-top-0">Nama Barang</th>
+                                <th class="border-top-0">Harga</th>
+                                <th class="border-top-0">Jumlah (kwintal)</th>
+                                <th class="border-top-0">Total</th>
+                                <th class="border-top-0">Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td class="txt-oflo">26 Januari</td>
+                                <td>Cabai</td>
+                                <td><span class="txt-success">700.000</span></td>
+                                <td><span class="txt-oflo">2 </span></td>
+                                <td><span class="txt-oflo">1.400.000</span></td>
+                                <td><span class="txt-oflo">Terjual</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- TOTAL PENGELUARAN -->
+    <!-- ============================================================== -->
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-sm-12">
+            <div class="white-box">
+                <div class="d-md-flex mb-3">
+                    <h3 class="box-title mb-0">Total Pengeluaran</h3>
+                    <div class="col-md-3 col-sm-4 col-xs-6 ms-auto">
+                        <select class="form-select shadow-none row border-top">
+                            <option>Januari 2023</option>
+                            <option>Februari 2023</option>
+                            <option>Maret 2023</option>
+                            <option>April 2023</option>
+                            <option>Mei 2023</option>
+                            <option>Juni 2023</option>
+                            <option>Juli 2023</option>
+                            <option>Agustus 2023</option>
+                            <option>September 2023</option>
+                            <option>Oktober 2023</option>
+                            <option>November 2023</option>
+                            <option>Desember 2023</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table no-wrap">
+                        <thead>
+                            <tr>
+                                <th class="border-top-0">Nomor</th>
+                                <th class="border-top-0">Tanggal</th>
+                                <th class="border-top-0">Barang</th>
+                                <th class="border-top-0">Harga</th>
+                                <th class="border-top-0">Jumlah (kwintal)</th>
+                                <th class="border-top-0">Total</th>
+                                <th class="border-top-0">Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td class="txt-oflo">26 Januari</td>
+                                <td>Cabai</td>
+                                <td><span class="txt-success">350.000</span></td>
+                                <td><span class="txt-oflo">2 </span></td>
+                                <td><span class="txt-oflo">700.000</span></td>
+                                <td><span class="txt-oflo">Sudah Lunas</span></td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td class="txt-oflo">23 Januari</td>
+                                <td>Ganja</td>
+                                <td><span class="txt-success">30.000.000</span></td>
+                                <td><span class="txt-oflo">4 </span></td>
+                                <td><span class="txt-oflo">120.000.000</span></td>
+                                <td><span class="txt-oflo">Lunas sebagian</span></td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td class="txt-oflo">9 Januari</td>
+                                <td>Timun</td>
+                                <td><span class="txt-success">500.000</span></td>
+                                <td><span class="txt-oflo">5 </span></td>
+                                <td><span class="txt-oflo">2.500.000</span></td>
+                                <td><span class="txt-oflo">Sudah Lunas</span></td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td class="txt-oflo">10 Januari</td>
+                                <td>Padi</td>
+                                <td><span class="txt-success">1.500.000</span></td>
+                                <td><span class="txt-oflo">2 </span></td>
+                                <td><span class="txt-oflo">3.000.000</span></td>
+                                <td><span class="txt-oflo">Sudah Lunas</span></td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td class="txt-oflo">11 Januari</td>
+                                <td>Jagung</td>
+                                <td><span class="txt-success">2.000.000</span></td>
+                                <td><span class="txt-oflo">2 </span></td>
+                                <td><span class="txt-oflo">4.000.000</span></td>
+                                <td><span class="txt-oflo">Sudah Lunas</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

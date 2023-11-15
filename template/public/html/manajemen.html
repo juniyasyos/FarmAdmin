@@ -1,0 +1,112 @@
+{% extends 'public/html/base.html' %}
+
+{% block title %} FarmAdmin | Profile {% endblock %}
+
+{% block profile_info %}
+<a class="profile-pic" href="#">
+    <img src="../static/plugins/images/users/varun.jpg" alt="user-img" width="36"
+        class="img-circle">
+    <span class="text-white font-medium">Muhammad Rizky Ramdhani</span>
+</a>
+{% endblock %}
+
+{% block path %} Manajemen {% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="white-box">
+                <div class="container-fluid Manajemen Lahan pt-5 pb-5 Light text-align" ">
+                <div class=" container">
+                    <h1 class="display-6 text-left" id="manajemenlahan">Manajemen Lahan</h1>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">No</th>
+                                    <th scope="col">Nama Lahan</th>
+                                    <th scope="col">Luas Lahan (m)</th>
+                                    <th scope="col">Jenis Tanaman yang Ditanam</th>
+                                    <th scope="col">Lokasi Lahan</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>Lahan Surabaya</td>
+                                    <td>1800</td>
+                                    <td>Jagung</td>
+                                    <td>Jl. Manggar X Surabaya</td>
+                                    <td class="icon-list-demo row">
+                                        <div class="col-sm-6 col-md-6 col-lg-6 f-icon"><i class="fas fa-pencil-alt"></i>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6 col-lg-6 f-icon"><i class="fas fa-trash-alt"></i>
+                                        </div>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td>Lahan Karang Pring</td>
+                                    <td>500</td>
+                                    <td>Timun</td>
+                                    <td>Jl. Tapak Suci Karang Pring, Jember</td>
+                                    <td class="icon-list-demo row">
+                                        <div class="col-sm-6 col-md-6 col-lg-6 f-icon"><i class="fas fa-pencil-alt"></i>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6 col-lg-6 f-icon"><i class="fas fa-trash-alt"></i>
+                                        </div>
+                                </tr>
+                                <tr>
+                                    <th scope="row">3</th>
+                                    <td>Lahan Jenggawah</td>
+                                    <td>700</td>
+                                    <td>Cabai</td>
+                                    <td>Jl. Wirwodadi Jenggawah, Jember</td>
+                                    <td class="icon-list-demo row">
+                                        <div class="col-sm-6 col-md-6 col-lg-6 f-icon"><i class="fas fa-pencil-alt"></i>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6 col-lg-6 f-icon"><i class="fas fa-trash-alt"></i>
+                                        </div>
+                                </tr>
+                                <th scope="row">4</th>
+                                <td>Lahan Bedadung</td>
+                                <td>300</td>
+                                <td>Semangka</td>
+                                <td>Jl. Sukarno Bedadung, Jember</td>
+                                <td class="icon-list-demo row">
+                                    <div class="col-sm-6 col-md-6 col-lg-6 f-icon"><i class="fas fa-pencil-alt"></i>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 col-lg-6 f-icon"><i class="fas fa-trash-alt"></i>
+                                    </div>
+                                    </tr>
+                                <th scope="row">5</th>
+                                <td>Lahan Jember Lor</td>
+                                <td>1200</td>
+                                <td>Padi</td>
+                                <td>Jl. Surbiyono Jember Lor, Jember</td>
+                                <td class="icon-list-demo row">
+                                    <div class="col-sm-6 col-md-6 col-lg-6 f-icon">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 col-lg-6 f-icon">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </div>
+                                    </tr>
+                            </tbody>
+                        </table>
+                        <div class="tombol m1-auto">
+                            <button type="button" class="btn btn-danger text-white"><i class="fas fa-plus"
+                                    style="color: white;"></i> Add New Lahan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
+
+

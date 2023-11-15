@@ -2,22 +2,9 @@ import os
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_login import LoginManager, login_required, login_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
-from models import Models, User, db
+from models import Models, User, db, RegistrationForm
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired, Email, EqualTo, Length
 from icecream import ic
-
-
-class RegistrationForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email(), Length(max=30)])
-    full_name = StringField('Full Name', validators=[Length(max=80)])
-    nickname = StringField('Nickname', validators=[Length(max=30)])
-    phone_number = StringField('Phone Number', validators=[Length(max=20)])
-    password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
-    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    bio = StringField('Bio')
-    submit = SubmitField('Register')
 
 class MyApp:
     def __init__(self):
@@ -29,26 +16,28 @@ class MyApp:
 
         self.login_manager = LoginManager(self.app)
         self.login_manager.login_view = 'dashboard'
+        self.setup_user_loader()
+        self.setup_routes()
 
+    def setup_user_loader(self):
         @self.login_manager.user_loader
         def load_user(user_id):
             return User.query.get(int(user_id))
 
+    def setup_routes(self):
         @self.app.route('/login', methods=['GET', 'POST'])
         def login():
             if request.method == 'POST':
-                email = request.form.get('email')
-                password = request.form.get('password')
-
+                email, password = request.form.get('email'), request.form.get('password')
                 user = User.query.filter_by(email=email).first()
+
                 if user and check_password_hash(user.Password, password):
-                    login_user(user)    
+                    login_user(user)
                     return redirect(url_for('dashboard'))
                 else:
                     flash('Invalid email or password', 'error')
 
             return render_template('public/html/loginCoba.html', error=None)
-
 
         @self.app.route('/register', methods=['GET', 'POST'])
         def register():
@@ -77,8 +66,18 @@ class MyApp:
         @login_required
         def dashboard():
             return render_template('public/html/Dashboard.html')
+        
+        @self.app.route("/profile")
+        @login_required
+        def profile():
+            return render_template('public/html/profile.html')
 
-        @self.app.route('/homepage')
+        @self.app.route("/manajemen")
+        @login_required
+        def manajemen():
+            return render_template('public/html/manajemen.html')
+
+        @self.app.route('/')
         def homepage():
             return render_template('public/html/Homepage.html')
 
