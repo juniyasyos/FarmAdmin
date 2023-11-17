@@ -6,6 +6,7 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 import os
 
+
 load_dotenv()
 
 db = SQLAlchemy()
