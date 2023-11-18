@@ -26,6 +26,7 @@ class Controller_Application:
             return User.query.get(int(user_id))
 
     def setup_routes(self):
+        user = current_user
         @self.app.route('/login', methods=['GET', 'POST'])
         def login():
             if request.method == 'POST':
@@ -65,8 +66,7 @@ class Controller_Application:
 
         @self.app.route('/Dashboard', methods=["GET", "POST"])
         @login_required
-        def dashboard():
-            user = current_user 
+        def dashboard(): 
             customColors = ["#98a6ad", "#41b3f9", "#f4c63d", "#d17905", "#453d3f"];
             list_lahan = list(map(lambda x,y: [x,y], user.get_list_lahan(), customColors))
             
@@ -89,12 +89,18 @@ class Controller_Application:
         @self.app.route("/profile")
         @login_required
         def profile():
-            return render_template('public/html/profile.html')
+            data = {
+                'profil_user' : user
+                }
+            return render_template('public/html/profile.html', **data)
 
         @self.app.route("/manajemen")
         @login_required
         def manajemen():
-            return render_template('public/html/manajemen.html')
+            data = {
+                'profil_user' : user
+                }
+            return render_template('public/html/manajemen.html', **data)
                 
         @self.app.route('/')
         def homepage():
