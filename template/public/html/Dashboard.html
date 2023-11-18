@@ -109,11 +109,9 @@
                     <div class="col-md-3 col-sm-4 col-xs-6 ms-auto">
                         <select class="form-select shadow-none row border-top">
                             <option>Semua Lahan</option>
-                            <option>Lahan 1 </option>
-                            <option>Lahan 2 </option>
-                            <option>Lahan 3 </option>
-                            <option>Lahan 4 </option>
-                            <option>Lahan 5 </option>
+                            {% for nama, styles in list_lahan %}
+                            <option>Lahan : {{ nama }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>

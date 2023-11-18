@@ -44,6 +44,7 @@ class Models:
             f"{db_config['DB_HOST']}:{db_config['DB_PORT']}/{db_config['DB_NAME']}"
         )
 
+
 class RegistrationForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email(), Length(max=30)])
     full_name = StringField('Full Name', validators=[Length(max=80)])
@@ -54,7 +55,7 @@ class RegistrationForm(FlaskForm):
     bio = StringField('Bio')
     submit = SubmitField('Register')
 
-# Entity Database
+
 class User(db.Model, UserMixin):
     __tablename__ = 'User'
     id = db.Column(db.Integer, primary_key=True)
@@ -128,6 +129,7 @@ class Lahan(db.Model, UserMixin):
 
             return [[data_per_lahan[lahan_id].get(bulan, 0)/1000 for bulan in range(1, 13)] for lahan_id in data_per_lahan.keys()]
 
+
 class Pendapatan(db.Model, UserMixin):
     __tablename__ = 'Pendapatan'
     id = db.Column(db.Integer, primary_key=True)
@@ -147,6 +149,7 @@ class Pendapatan(db.Model, UserMixin):
             .all()
         )
 
+
 class Hasil_Panen(db.Model, UserMixin):
     __tablename__ = 'Hasil_Panen'
     id = db.Column(db.Integer, primary_key=True)
@@ -156,7 +159,7 @@ class Hasil_Panen(db.Model, UserMixin):
     waktu_mulai = db.Column(db.DateTime)
     waktu_panen = db.Column(db.DateTime)
     judul_panen = db.Column(db.String(255))
-    
+
 
 class Pengeluaran(db.Model, UserMixin):
     __tablename__ = 'Pengeluaran'
@@ -176,6 +179,7 @@ class Pengeluaran(db.Model, UserMixin):
             .all()
         )
     
+
 class Aktivitas_Lahan(db.Model, UserMixin):
     __tablename__ = 'Aktivitas_Lahan'
     id = db.Column(db.Integer, primary_key=True)

@@ -94,6 +94,7 @@ class Controller_Application:
                 }
             return render_template('public/html/profile.html', **data)
 
+
         @self.app.route("/manajemen")
         @login_required
         def manajemen():
@@ -101,6 +102,7 @@ class Controller_Application:
                 'profil_user' : user
                 }
             return render_template('public/html/manajemen.html', **data)
+                
                 
         @self.app.route('/')
         def homepage():
