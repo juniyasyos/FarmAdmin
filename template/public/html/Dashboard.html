@@ -1,12 +1,15 @@
 {% extends 'public/html/base.html' %}
 
-{% block title %} FarmAdmin/Dashboard {% endblock %}
+{% block title %} FarmAdmin | Dashboard {% endblock %}
 
 {% block profile_info %}
 <a class="profile-pic" href="#">
-    <img src="../static/plugins/images/users/varun.jpg" alt="user-img" width="36"
-        class="img-circle">
-    <span class="text-white font-medium">Muhammad Rizky Ramdhani</span>
+    {% if profil_user.image %}
+    <img src="{{ profil_user.image }}" alt="user-img" width="36" class="img-circle">
+    {% else %}
+    <img src="../static/plugins/images/users/varun.jpg" alt="user-img" width="36" class="img-circle">
+    {% endif %}
+    <span class="text-white font-medium">{{ profil_user.Nama_Penggilan }}</span>
 </a>
 {% endblock %}
 
@@ -24,7 +27,7 @@
                                 style="display: inline-block; width: 67px; height: 30px; vertical-align: top;"></canvas>
                         </div>
                     </li>
-                    <li class="ms-auto"><span class="counter text-purple">6</span></li>
+                    <li class="ms-auto"><span class="counter text-purple">{{ total_lahan }}</span></li>
                 </ul>
             </div>
         </div>
@@ -37,7 +40,7 @@
                                 style="display: inline-block; width: 67px; height: 30px; vertical-align: top;"></canvas>
                         </div>
                     </li>
-                    <li class="ms-auto"><span class="counter text-purple">176.500.000</span></li>
+                    <li class="ms-auto"><span class="counter text-purple">{{ total_hasil_panen }}</span></li>
                 </ul>
             </div>
         </div>
@@ -50,7 +53,7 @@
                                 style="display: inline-block; width: 67px; height: 30px; vertical-align: top;"></canvas>
                         </div>
                     </li>
-                    <li class="ms-auto"><span class="counter text-info">10.xxx.xxx.xxx</span>
+                    <li class="ms-auto"><span class="counter text-info">{{ total_pendapatan }}</span>
                     </li>
                 </ul>
             </div>
@@ -64,7 +67,7 @@
                                 style="display: inline-block; width: 67px; height: 30px; vertical-align: top;"></canvas>
                         </div>
                     </li>
-                    <li class="ms-auto"><span class="counter text-info">13.xxx.xxx.xxx</span>
+                    <li class="ms-auto"><span class="counter text-info">{{ total_pengeluaran }}</span>
                     </li>
                 </ul>
             </div>
@@ -79,26 +82,12 @@
                 <h3 class="box-title">Statistik Lahan</h3>
                 <div class="d-md-flex">
                     <ul class="list-inline d-flex ms-auto">
+                        {% for nama, styles in list_lahan %}
                         <li class="ps-3">
-                            <h5><i class="fa fa-circle me-1 text-info"></i><a class="text-black-50"
-                                    href="#">Lahan 1</a></h5>
+                            <h5><i class="fa fa-circle me-1" ; style="color: {{ styles }};"></i><a class="text-black-50"
+                                    href="#">{{nama}}</a></h5>
                         </li>
-                        <li class="ps-3">
-                            <h5><i class="fa fa-circle me-1 text-inverse"></i><a class="text-black-50"
-                                    href="#">Lahan 2</a></h5>
-                        </li>
-                        <li class="ps-3">
-                            <h5><i class="fa fa-circle me-1 text-warning"></i><a class="text-black-50"
-                                    href="#">Lahan 3</a></h5>
-                        </li>
-                        <li class="ps-3">
-                            <h5><i class="fa fa-circle me-1 text-danger"></i><a class="text-black-50"
-                                    href="#">Lahan 4</a></h5>
-                        </li>
-                        <li class="ps-3">
-                            <h5><i class="fa fa-circle me-1 text-success"></i><a class="text-black-50"
-                                    href="#">Lahan 5</a></h5>
-                        </li>
+                        {% endfor %}
                     </ul>
                 </div>
                 <div id="ct-visits" style="height: 50vh;">
@@ -120,11 +109,9 @@
                     <div class="col-md-3 col-sm-4 col-xs-6 ms-auto">
                         <select class="form-select shadow-none row border-top">
                             <option>Semua Lahan</option>
-                            <option>Lahan 1 </option>
-                            <option>Lahan 2 </option>
-                            <option>Lahan 3 </option>
-                            <option>Lahan 4 </option>
-                            <option>Lahan 5 </option>
+                            {% for nama, styles in list_lahan %}
+                            <option>Lahan : {{ nama }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>
@@ -140,64 +127,16 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for pengeluaran, lahan, activity in list_aktifitas %}
                             <tr>
-                                <td>1</td>
-                                <td>2023-11-13</td>
-                                <td>Membaca</td>
-                                <td><input type="checkbox" checked></td>
-                                <td>Menyelesaikan buku favorit</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>2023-11-14</td>
-                                <td>Olahraga</td>
+                                <td> {{ loop.index }} </td>
+                                <td class="txt-oflo">{{ pengeluaran.tanggal.strftime('%d %B') }}</td>
+                                <td>{{ pengeluaran.jenis_aktivitas }}</td>
                                 <td><input type="checkbox"></td>
-                                <td>Melakukan jogging selama 30 menit</td>
+                                <td>{{ activity.status }}</td>
                             </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>2023-11-15</td>
-                                <td>Belajar</td>
-                                <td><input type="checkbox" checked></td>
-                                <td>Mempelajari pemrograman web</td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>2023-11-16</td>
-                                <td>Rapat Kerja</td>
-                                <td><input type="checkbox"></td>
-                                <td>Membahas proyek terkini</td>
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td>2023-11-17</td>
-                                <td>Berkumpul dengan Teman</td>
-                                <td><input type="checkbox" checked></td>
-                                <td>Makan malam bersama teman-teman</td>
-                            </tr>
-                            <tr>
-                                <td>6</td>
-                                <td>2023-11-18</td>
-                                <td>Liburan</td>
-                                <td><input type="checkbox"></td>
-                                <td>Merencanakan perjalanan liburan</td>
-                            </tr>
-                            <tr>
-                                <td>7</td>
-                                <td>2023-11-19</td>
-                                <td>Membaca</td>
-                                <td><input type="checkbox" checked></td>
-                                <td>Membaca artikel tentang teknologi</td>
-                            </tr>
-                            <tr>
-                                <td>8</td>
-                                <td>2023-11-20</td>
-                                <td>Olahraga</td>
-                                <td><input type="checkbox"></td>
-                                <td>Senam pagi selama 20 menit</td>
-                            </tr>
+                            {% endfor %}
                         </tbody>
-
                     </table>
                 </div>
             </div>
@@ -210,7 +149,7 @@
         <div class="col-md-12 col-lg-12 col-sm-12">
             <div class="white-box">
                 <div class="d-md-flex mb-3">
-                    <h3 class="box-title mb-0">Total Pendapatan</h3>
+                    <h3 class="box-title mb-0">Histori Pendapatan</h3>
                     <div class="col-md-3 col-sm-4 col-xs-6 ms-auto">
                         <select class="form-select shadow-none row border-top">
                             <option>Januari 2023</option>
@@ -233,8 +172,8 @@
                         <thead>
                             <tr>
                                 <th class="border-top-0">Nomor</th>
-                                <th class="border-top-0">Tanggal</th>
-                                <th class="border-top-0">Nama Barang</th>
+                                <th class="border-top-0">Judul Panen</th>
+                                <th class="border-top-0">Komoditas</th>
                                 <th class="border-top-0">Harga</th>
                                 <th class="border-top-0">Jumlah (kwintal)</th>
                                 <th class="border-top-0">Total</th>
@@ -242,15 +181,18 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for hasil_panen, pendapatan in list_pendapatan %}
                             <tr>
-                                <td>1</td>
-                                <td class="txt-oflo">26 Januari</td>
-                                <td>Cabai</td>
-                                <td><span class="txt-success">700.000</span></td>
-                                <td><span class="txt-oflo">2 </span></td>
-                                <td><span class="txt-oflo">1.400.000</span></td>
-                                <td><span class="txt-oflo">Terjual</span></td>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ hasil_panen.judul_panen }}</td>
+                                <td>{{ pendapatan.nama_barang }}</td>
+                                <td><span class="txt-success">{{ pendapatan.harga_barang }}</span></td>
+                                <td><span class="txt-oflo">{{ pendapatan.jumlah }}</span></td>
+                                <td><span class="txt-oflo">{{ (pendapatan.harga_barang * pendapatan.jumlah) }}</span>
+                                </td>
+                                <td><span class="txt-oflo">{{ pendapatan.keterangan }}</span></td>
                             </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -264,7 +206,7 @@
         <div class="col-md-12 col-lg-12 col-sm-12">
             <div class="white-box">
                 <div class="d-md-flex mb-3">
-                    <h3 class="box-title mb-0">Total Pengeluaran</h3>
+                    <h3 class="box-title mb-0">Histori Pengeluaran</h3>
                     <div class="col-md-3 col-sm-4 col-xs-6 ms-auto">
                         <select class="form-select shadow-none row border-top">
                             <option>Januari 2023</option>
@@ -286,61 +228,24 @@
                     <table class="table no-wrap">
                         <thead>
                             <tr>
-                                <th class="border-top-0">Nomor</th>
+                                <th class="border-top-0">No</th>
                                 <th class="border-top-0">Tanggal</th>
-                                <th class="border-top-0">Barang</th>
+                                <th class="border-top-0">Lahan</th>
+                                <th class="border-top-0">Aktivitas</th>
                                 <th class="border-top-0">Harga</th>
-                                <th class="border-top-0">Jumlah (kwintal)</th>
-                                <th class="border-top-0">Total</th>
                                 <th class="border-top-0">Keterangan</th>
                             </tr>
                         </thead>
                         <tbody>
+                            {% for lahan, pengeluaran in list_pengeluaran %}
                             <tr>
-                                <td>1</td>
-                                <td class="txt-oflo">26 Januari</td>
-                                <td>Cabai</td>
-                                <td><span class="txt-success">350.000</span></td>
-                                <td><span class="txt-oflo">2 </span></td>
-                                <td><span class="txt-oflo">700.000</span></td>
-                                <td><span class="txt-oflo">Sudah Lunas</span></td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td class="txt-oflo">23 Januari</td>
-                                <td>Ganja</td>
-                                <td><span class="txt-success">30.000.000</span></td>
-                                <td><span class="txt-oflo">4 </span></td>
-                                <td><span class="txt-oflo">120.000.000</span></td>
-                                <td><span class="txt-oflo">Lunas sebagian</span></td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td class="txt-oflo">9 Januari</td>
-                                <td>Timun</td>
-                                <td><span class="txt-success">500.000</span></td>
-                                <td><span class="txt-oflo">5 </span></td>
-                                <td><span class="txt-oflo">2.500.000</span></td>
-                                <td><span class="txt-oflo">Sudah Lunas</span></td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td class="txt-oflo">10 Januari</td>
-                                <td>Padi</td>
-                                <td><span class="txt-success">1.500.000</span></td>
-                                <td><span class="txt-oflo">2 </span></td>
-                                <td><span class="txt-oflo">3.000.000</span></td>
-                                <td><span class="txt-oflo">Sudah Lunas</span></td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td class="txt-oflo">11 Januari</td>
-                                <td>Jagung</td>
-                                <td><span class="txt-success">2.000.000</span></td>
-                                <td><span class="txt-oflo">2 </span></td>
-                                <td><span class="txt-oflo">4.000.000</span></td>
-                                <td><span class="txt-oflo">Sudah Lunas</span></td>
-                            </tr>
+                                <td>{{ loop.index }}</td>
+                                <td class="txt-oflo">{{ pengeluaran.tanggal.strftime('%d %B') }}</td>
+                                <td>{{ lahan.nama }}</td>
+                                <td>{{ pengeluaran.jenis_aktivitas }}</td>
+                                <td><span class="txt-success">{{ pengeluaran.total_pengeluaran }}</span></td>
+                                <td><span class="txt-oflo">{{ pengeluaran.keterangan }}</span></td>
+                                {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -348,4 +253,37 @@
         </div>
     </div>
 </div>
+{% endblock %}
+{% block scripts %}
+<script>
+    $(function () {
+        "use strict";
+
+        // Mendefinisikan variabel Jinja
+        var labels = {{ chart_labels | tojson
+    }};
+    var seriesData = {{ chart_series | tojson }};
+
+    //ct-visits
+    new Chartist.Line(
+        "#ct-visits",
+        {
+            labels: labels,
+            series: seriesData,
+        },
+        {
+            top: 0,
+            low: 1,
+            showPoint: true,
+            fullWidth: true,
+            plugins: [Chartist.plugins.tooltip()],
+            axisY: {
+                labelInterpolationFnc: function (value) {
+                    return value / 1 + "jt";
+                },
+            },
+        }
+    );
+    });
+</script>
 {% endblock %}

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>FarmAdmin | Homepage</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -14,8 +14,8 @@
         <div class="max-w-7xl mx-auto">
             <nav class="border-gray-200">
                 <div class="container mx-auto flex flex-wrap items-center justify-between">
-                    <a href="#" class="flex">
-                        <svg class="h-10 mr-3" width="51" height="70" viewBox="0 0 51 70" fill="none"
+                    <a href="{{ url_for('homepage') }}" class="flex">
+                        <svg class="h-10 ml-1" width="51" height="70" viewBox="0 0 51 70" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <g clip-path="url(#clip0)">
                                 <path d="M1 53H27.9022C40.6587 53 51 42.7025 51 30H24.0978C11.3412 30 1 40.2975 1 53Z"
@@ -32,7 +32,7 @@
                                 </clipPath>
                             </defs>
                         </svg>
-                        <span class="self-center text-lg font-semibold whitespace-nowrap">FarmAdmin</span>
+                        <span class="self-center text-3xl font-bold text-blue-700 whitespace-nowrap">armAdmin</span>
                     </a>
                     <div class="drawer-end">
                         <input id="sidebar" type="checkbox" class="drawer-toggle" />

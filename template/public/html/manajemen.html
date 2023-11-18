@@ -1,12 +1,15 @@
 {% extends 'public/html/base.html' %}
 
-{% block title %} FarmAdmin | Profile {% endblock %}
+{% block title %} FarmAdmin | Manajemen {% endblock %}
 
 {% block profile_info %}
 <a class="profile-pic" href="#">
-    <img src="../static/plugins/images/users/varun.jpg" alt="user-img" width="36"
-        class="img-circle">
-    <span class="text-white font-medium">Muhammad Rizky Ramdhani</span>
+    {% if profil_user.image %}
+    <img src="{{ profil_user.image }}" alt="user-img" width="36" class="img-circle">
+    {% else %}
+    <img src="../static/plugins/images/users/varun.jpg" alt="user-img" width="36" class="img-circle">
+    {% endif %}
+    <span class="text-white font-medium">{{ profil_user.Nama_Penggilan }}</span>
 </a>
 {% endblock %}
 
