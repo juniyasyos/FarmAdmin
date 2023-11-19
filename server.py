@@ -41,6 +41,7 @@ class Controller_Application:
 
             return render_template('public/html/loginCoba.html', error=None)
 
+
         @self.app.route('/register', methods=['GET', 'POST'])
         def register():
             form = RegistrationForm()
@@ -64,6 +65,7 @@ class Controller_Application:
 
             return render_template('public/html/registerEx.html', form=form)
 
+
         @self.app.route('/Dashboard', methods=["GET", "POST"])
         @login_required
         def dashboard(): 
@@ -85,7 +87,7 @@ class Controller_Application:
                 }
             return render_template('public/html/Dashboard.html', **data)
 
-            
+
         @self.app.route("/profile")
         @login_required
         def profile():

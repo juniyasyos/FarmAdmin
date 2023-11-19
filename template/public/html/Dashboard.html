@@ -27,7 +27,7 @@
                                 style="display: inline-block; width: 67px; height: 30px; vertical-align: top;"></canvas>
                         </div>
                     </li>
-                    <li class="ms-auto"><span class="counter text-purple">{{ total_lahan }}</span></li>
+                    <li class="ms-auto"><span class="counter text-purple format-number" id="numberToFormat1"> {{ total_lahan }}</span></li>
                 </ul>
             </div>
         </div>
@@ -40,7 +40,7 @@
                                 style="display: inline-block; width: 67px; height: 30px; vertical-align: top;"></canvas>
                         </div>
                     </li>
-                    <li class="ms-auto"><span class="counter text-purple">{{ total_hasil_panen }}</span></li>
+                    <li class="ms-auto"><span class="counter text-purple format-number" id="numberToFormat2">{{ total_hasil_panen }}</span></li>
                 </ul>
             </div>
         </div>
@@ -53,7 +53,7 @@
                                 style="display: inline-block; width: 67px; height: 30px; vertical-align: top;"></canvas>
                         </div>
                     </li>
-                    <li class="ms-auto"><span class="counter text-info">{{ total_pendapatan }}</span>
+                    <li class="ms-auto"><span class="counter text-info format-number" id="numberToFormat3">{{ total_pendapatan }}</span>
                     </li>
                 </ul>
             </div>
@@ -67,7 +67,7 @@
                                 style="display: inline-block; width: 67px; height: 30px; vertical-align: top;"></canvas>
                         </div>
                     </li>
-                    <li class="ms-auto"><span class="counter text-info">{{ total_pengeluaran }}</span>
+                    <li class="ms-auto"><span class="counter text-info format-number" id="numberToFormat4">{{ total_pengeluaran }}</span>
                     </li>
                 </ul>
             </div>
@@ -186,9 +186,9 @@
                                 <td>{{ loop.index }}</td>
                                 <td>{{ hasil_panen.judul_panen }}</td>
                                 <td>{{ pendapatan.nama_barang }}</td>
-                                <td><span class="txt-success">{{ pendapatan.harga_barang }}</span></td>
+                                <td><span class="txt-success format-number">{{ pendapatan.harga_barang | int}}</span></td>
                                 <td><span class="txt-oflo">{{ pendapatan.jumlah }}</span></td>
-                                <td><span class="txt-oflo">{{ (pendapatan.harga_barang * pendapatan.jumlah) }}</span>
+                                <td><span class="txt-oflo format-number">{{ (pendapatan.harga_barang * pendapatan.jumlah)|int }}</span>
                                 </td>
                                 <td><span class="txt-oflo">{{ pendapatan.keterangan }}</span></td>
                             </tr>
@@ -243,7 +243,7 @@
                                 <td class="txt-oflo">{{ pengeluaran.tanggal.strftime('%d %B') }}</td>
                                 <td>{{ lahan.nama }}</td>
                                 <td>{{ pengeluaran.jenis_aktivitas }}</td>
-                                <td><span class="txt-success">{{ pengeluaran.total_pengeluaran }}</span></td>
+                                <td><span class="txt-success format-number">{{ pengeluaran.total_pengeluaran | int }}</span></td>
                                 <td><span class="txt-oflo">{{ pengeluaran.keterangan }}</span></td>
                                 {% endfor %}
                         </tbody>
@@ -257,7 +257,6 @@
 {% block scripts %}
 <script>
     $(function () {
-        "use strict";
 
         // Mendefinisikan variabel Jinja
         var labels = {{ chart_labels | tojson

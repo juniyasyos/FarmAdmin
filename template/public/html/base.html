@@ -18,6 +18,28 @@
         href="../static/plugins/bower_components/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.css">
     <link href="../static/css/style.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../static/css/style.css">
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var numbersToFormat = document.getElementsByClassName('format-number');
+
+            Array.from(numbersToFormat).forEach(function (currentNumberElement) {
+                var currentNumber = parseInt(currentNumberElement.innerText.replace(/\,/g, ''));
+
+                // Format current number
+                var formattedNumber = formatNumberWithCommas(currentNumber);
+                displayFormattedNumber(currentNumberElement, formattedNumber);
+            });
+        });
+
+        function formatNumberWithCommas(number) {
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function displayFormattedNumber(element, formattedNumber) {
+            element.textContent = formattedNumber;
+        }
+    </script>
 </head>
 
 <body>
