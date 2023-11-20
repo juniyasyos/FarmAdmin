@@ -27,7 +27,8 @@
                                 style="display: inline-block; width: 67px; height: 30px; vertical-align: top;"></canvas>
                         </div>
                     </li>
-                    <li class="ms-auto"><span class="counter text-purple format-number" id="numberToFormat1"> {{ total_lahan }}</span></li>
+                    <li class="ms-auto"><span class="counter text-purple format-number" id="numberToFormat1"> {{
+                            total_lahan }}</span></li>
                 </ul>
             </div>
         </div>
@@ -40,7 +41,8 @@
                                 style="display: inline-block; width: 67px; height: 30px; vertical-align: top;"></canvas>
                         </div>
                     </li>
-                    <li class="ms-auto"><span class="counter text-purple format-number" id="numberToFormat2">{{ total_hasil_panen }}</span></li>
+                    <li class="ms-auto"><span class="counter text-purple format-number" id="numberToFormat2">{{
+                            total_hasil_panen }}</span></li>
                 </ul>
             </div>
         </div>
@@ -53,7 +55,8 @@
                                 style="display: inline-block; width: 67px; height: 30px; vertical-align: top;"></canvas>
                         </div>
                     </li>
-                    <li class="ms-auto"><span class="counter text-info format-number" id="numberToFormat3">{{ total_pendapatan }}</span>
+                    <li class="ms-auto"><span class="counter text-info format-number" id="numberToFormat3">{{
+                            total_pendapatan }}</span>
                     </li>
                 </ul>
             </div>
@@ -67,7 +70,8 @@
                                 style="display: inline-block; width: 67px; height: 30px; vertical-align: top;"></canvas>
                         </div>
                     </li>
-                    <li class="ms-auto"><span class="counter text-info format-number" id="numberToFormat4">{{ total_pengeluaran }}</span>
+                    <li class="ms-auto"><span class="counter text-info format-number" id="numberToFormat4">{{
+                            total_pengeluaran }}</span>
                     </li>
                 </ul>
             </div>
@@ -99,28 +103,29 @@
         </div>
     </div>
     <!-- ============================================================== -->
-    <!-- AKTIVITAS HARIAN 2-->
+    <!-- AKTIVITAS HARIAN -->
     <!-- ============================================================== -->
     <div class="row">
         <div class="col-md-12 col-lg-12 col-sm-12">
-            <div class="white-box">
+            <div class="white-box" id="jadwalAktivitas">
                 <div class="d-md-flex mb-3">
                     <h3 class="box-title mb-0">Jadwal Aktivitas Terdekat</h3>
                     <div class="col-md-3 col-sm-4 col-xs-6 ms-auto">
-                        <select class="form-select shadow-none row border-top">
-                            <option>Semua Lahan</option>
+                        <select class="form-select shadow-none row border-top" id="selectLahan">
+                            <option value="semua">Semua Lahan</option>
                             {% for nama, styles in list_lahan %}
-                            <option>Lahan : {{ nama }}</option>
+                            <option value="{{ nama }}">{{ nama }}</option>
                             {% endfor %}
                         </select>
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table no-wrap">
+                    <table class="table no-wrap" id="jadwalAktivitasTable">
                         <thead>
                             <tr>
                                 <th class="border-top-0">Nomor</th>
                                 <th class="border-top-0">Tanggal</th>
+                                <th class="border-top-0">Lahan</th>
                                 <th class="border-top-0">Aktivitas</th>
                                 <th class="border-top-0">Status</th>
                                 <th class="border-top-0">Keterangan</th>
@@ -128,9 +133,11 @@
                         </thead>
                         <tbody>
                             {% for pengeluaran, lahan, activity in list_aktifitas %}
-                            <tr>
-                                <td> {{ loop.index }} </td>
+                            <tr data-lahan="{{ lahan.nama }}" data-status="{{ activity.status }}"
+                                data-keterangan="{{ lahan.keterangan }}">
+                                <td>{{ loop.index }}</td>
                                 <td class="txt-oflo">{{ pengeluaran.tanggal.strftime('%d %B') }}</td>
+                                <td>{{ lahan.nama }}</td>
                                 <td>{{ pengeluaran.jenis_aktivitas }}</td>
                                 <td><input type="checkbox"></td>
                                 <td>{{ activity.status }}</td>
@@ -150,22 +157,6 @@
             <div class="white-box">
                 <div class="d-md-flex mb-3">
                     <h3 class="box-title mb-0">Histori Pendapatan</h3>
-                    <div class="col-md-3 col-sm-4 col-xs-6 ms-auto">
-                        <select class="form-select shadow-none row border-top">
-                            <option>Januari 2023</option>
-                            <option>Februari 2023</option>
-                            <option>Maret 2023</option>
-                            <option>April 2023</option>
-                            <option>Mei 2023</option>
-                            <option>Juni 2023</option>
-                            <option>Juli 2023</option>
-                            <option>Agustus 2023</option>
-                            <option>September 2023</option>
-                            <option>Oktober 2023</option>
-                            <option>November 2023</option>
-                            <option>Desember 2023</option>
-                        </select>
-                    </div>
                 </div>
                 <div class="table-responsive">
                     <table class="table no-wrap">
@@ -186,9 +177,11 @@
                                 <td>{{ loop.index }}</td>
                                 <td>{{ hasil_panen.judul_panen }}</td>
                                 <td>{{ pendapatan.nama_barang }}</td>
-                                <td><span class="txt-success format-number">{{ pendapatan.harga_barang | int}}</span></td>
+                                <td><span class="txt-success format-number">{{ pendapatan.harga_barang | int}}</span>
+                                </td>
                                 <td><span class="txt-oflo">{{ pendapatan.jumlah }}</span></td>
-                                <td><span class="txt-oflo format-number">{{ (pendapatan.harga_barang * pendapatan.jumlah)|int }}</span>
+                                <td><span class="txt-oflo format-number">{{ (pendapatan.harga_barang *
+                                        pendapatan.jumlah)|int }}</span>
                                 </td>
                                 <td><span class="txt-oflo">{{ pendapatan.keterangan }}</span></td>
                             </tr>
@@ -243,7 +236,8 @@
                                 <td class="txt-oflo">{{ pengeluaran.tanggal.strftime('%d %B') }}</td>
                                 <td>{{ lahan.nama }}</td>
                                 <td>{{ pengeluaran.jenis_aktivitas }}</td>
-                                <td><span class="txt-success format-number">{{ pengeluaran.total_pengeluaran | int }}</span></td>
+                                <td><span class="txt-success format-number">{{ pengeluaran.total_pengeluaran | int
+                                        }}</span></td>
                                 <td><span class="txt-oflo">{{ pengeluaran.keterangan }}</span></td>
                                 {% endfor %}
                         </tbody>
@@ -257,8 +251,6 @@
 {% block scripts %}
 <script>
     $(function () {
-
-        // Mendefinisikan variabel Jinja
         var labels = {{ chart_labels | tojson
     }};
     var seriesData = {{ chart_series | tojson }};
@@ -284,5 +276,36 @@
         }
     );
     });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var selectLahan = document.getElementById("selectLahan");
+        var jadwalAktivitasTable = document.getElementById("jadwalAktivitasTable");
+
+        // Save the header row as a reference outside the event listener
+        var headerRow = jadwalAktivitasTable.querySelector("thead tr");
+
+        selectLahan.addEventListener("change", function () {
+            var selectedLahan = selectLahan.value;
+
+            // Loop through rows, including the header row
+            Array.from(jadwalAktivitasTable.getElementsByTagName("tr")).forEach(function (row) {
+                var lahanData = row.getAttribute("data-lahan");
+
+                // Display the header row regardless of the filter
+                if (row === headerRow) {
+                    row.style.display = "table-row";
+                } else {
+                    // Logika sesuai dengan kebutuhan Anda
+                    if (selectedLahan === "semua" || lahanData === selectedLahan) {
+                        row.style.display = "table-row";
+                    } else {
+                        row.style.display = "none";
+                    }
+                }
+            });
+        });
+    });
+
+
 </script>
 {% endblock %}

@@ -2,7 +2,7 @@ import os
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_login import LoginManager, login_required, login_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
-from models import Models, User, db, RegistrationForm, Aktivitas_Lahan, Lahan, Pengeluaran, Pendapatan
+from models import *
 from flask_wtf import FlaskForm
 from sqlalchemy import func, cast, Integer
 from icecream import ic
@@ -69,7 +69,7 @@ class Controller_Application:
         @self.app.route('/Dashboard', methods=["GET", "POST"])
         @login_required
         def dashboard(): 
-            customColors = ["#98a6ad", "#41b3f9", "#f4c63d", "#d17905", "#453d3f"];
+            customColors = ["#98a6ad", "#41b3f9", "#f4c63d", "#d17905", "#453d3f", "#453d3f"];
             list_lahan = list(map(lambda x,y: [x,y], user.get_list_lahan(), customColors))
             
             data = {

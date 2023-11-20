@@ -84,11 +84,9 @@ class User(db.Model, UserMixin):
             join(Aktivitas_Lahan, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id).\
             join(Lahan).filter(Lahan.user_id == self.id).scalar() or 0
     
-    def get_list_lahan(self, get_all=False):
-        result = list(map(lambda x:str(x)[1:-1], ic(Lahan.query.filter_by(user_id=self.id).all())))
-        if get_all and len(result) >= 5:
-            return result
-        return result[0:5]
+    def get_list_lahan(self):
+        result = list(map(lambda x:str(x)[1:-1], Lahan.query.filter_by(user_id=self.id).all()))
+        return result
             
 
 class Lahan(db.Model, UserMixin):
@@ -128,7 +126,8 @@ class Lahan(db.Model, UserMixin):
 
                 data_per_lahan[lahan_id][bulan] = total_pengeluaran
 
-            return [[data_per_lahan[lahan_id].get(bulan, 0)/1000 for bulan in range(1, 13)] for lahan_id in data_per_lahan.keys()]
+            return list(map(lambda lahan_id: list(map(lambda bulan: data_per_lahan[lahan_id].get(bulan, 0) / 1000, range(1, 13))), data_per_lahan.keys()))
+
 
 
 class Pendapatan(db.Model, UserMixin):
