@@ -92,16 +92,20 @@ class Controller_Application:
         @login_required
         def profile():
             data = {
-                'profil_user' : user
+                'profil_user' : user,
+              
                 }
             return render_template('public/html/profile.html', **data)
 
 
-        @self.app.route("/manajemen")
+        @self.app.route("/manajemen", methods=["GET", "POST"])
         @login_required
         def manajemen():
+        
             data = {
-                'profil_user' : user
+                'profil_user': user,
+                'lahan_data': Lahan.get_all(current_user=user),
+    
                 }
             return render_template('public/html/manajemen.html', **data)
                 
