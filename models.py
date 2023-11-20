@@ -95,8 +95,16 @@ class Lahan(db.Model, UserMixin):
     nama = db.Column(db.String(255))
     lokasi = db.Column(db.String(255))
     deskripsi = db.Column(db.TEXT)
+    luas = db.Column(db.Integer)
+    jenis_tanaman = db.Column(db.String(255))
     user_id = db.Column(db.Integer, db.ForeignKey('User.id'))
     user = db.relationship('User', backref=db.backref('lahans', lazy=True))
+
+    def get_all(current_user):
+        return db.session.query(Lahan).filter_by(user=current_user).all()
+        
+
+
 
     def Pengeluaran_lahan_perbulan(current_user):
             result = (

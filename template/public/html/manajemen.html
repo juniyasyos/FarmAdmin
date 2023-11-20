@@ -32,10 +32,23 @@
                                     <th scope="col">Luas Lahan (m)</th>
                                     <th scope="col">Jenis Tanaman yang Ditanam</th>
                                     <th scope="col">Lokasi Lahan</th>
+                                    <th scope="col">Deskripsi</th>
                                     <th scope="col"></th>
                                 </tr>
                             </thead>
                             <tbody>
+                              {% for lahan in lahan_data %}
+                                  <tr>
+                                      <td>{{ loop.index }}</td>
+                                      <td>{{ lahan.nama }}</td>
+                                      <td>{{ lahan.luas }}</td>
+                                      <td>{{ lahan.jenis_tanaman }}</td>
+                                      <td>{{ lahan.lokasi }}</td>
+                                      <td>{{ lahan.deskripsi }}</td>
+                                  </tr>
+                              {% endfor %}
+                          </tbody>
+                            <!-- <tbody>
                                 <tr>
                                     <th scope="row">1</th>
                                     <td>Lahan Surabaya</td>
@@ -96,7 +109,7 @@
                                         <i class="fas fa-trash-alt"></i>
                                     </div>
                                     </tr>
-                            </tbody>
+                            </tbody> -->
                         </table>
                         <div class="tombol m1-auto">
                             <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Tambah Lahan</button> -->
