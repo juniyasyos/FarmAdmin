@@ -4,12 +4,12 @@
 
 {% block profile_info %}
 <a class="profile-pic" href="#">
-    {% if profil_user.image %}
-    <img src="{{ profil_user.image }}" alt="user-img" width="36" class="img-circle">
-    {% else %}
-    <img src="../static/plugins/images/users/varun.jpg" alt="user-img" width="36" class="img-circle">
-    {% endif %}
-    <span class="text-white font-medium">{{ profil_user.Nama_Penggilan }}</span>
+  {% if profil_user.image %}
+  <img src="{{ profil_user.image }}" alt="user-img" width="36" class="img-circle">
+  {% else %}
+  <img src="../static/plugins/images/users/varun.jpg" alt="user-img" width="36" class="img-circle">
+  {% endif %}
+  <span class="text-white font-medium">{{ profil_user.Nama_Penggilan }}</span>
 </a>
 {% endblock %}
 
@@ -17,149 +17,85 @@
 
 {% block content %}
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="white-box">
-                <div class="container-fluid Manajemen Lahan pt-5 pb-5 Light text-align" ">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="white-box">
+        <div class="container-fluid Manajemen Lahan pt-5 pb-5 Light text-align" ">
                 <div class=" container">
-                    <h1 class="display-6 text-left" id="manajemenlahan">Manajemen Lahan</h1>
-                    <div class="card-body">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">No</th>
-                                    <th scope="col">Nama Lahan</th>
-                                    <th scope="col">Luas Lahan (m)</th>
-                                    <th scope="col">Jenis Tanaman yang Ditanam</th>
-                                    <th scope="col">Lokasi Lahan</th>
-                                    <th scope="col">Deskripsi</th>
-                                    <th scope="col"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                              {% for lahan in lahan_data %}
-                                  <tr>
-                                      <td>{{ loop.index }}</td>
-                                      <td>{{ lahan.nama }}</td>
-                                      <td>{{ lahan.luas }}</td>
-                                      <td>{{ lahan.jenis_tanaman }}</td>
-                                      <td>{{ lahan.lokasi }}</td>
-                                      <td>{{ lahan.deskripsi }}</td>
-                                  </tr>
-                              {% endfor %}
-                          </tbody>
-                            <!-- <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Lahan Surabaya</td>
-                                    <td>1800</td>
-                                    <td>Jagung</td>
-                                    <td>Jl. Manggar X Surabaya</td>
-                                    <td class="icon-list-demo row">
-                                        <div class="col-sm-6 col-md-6 col-lg-6 f-icon"><i class="fas fa-pencil-alt"></i>
-                                        </div>
-                                        <div class="col-sm-6 col-md-6 col-lg-6 f-icon"><i class="fas fa-trash-alt"></i>
-                                        </div>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Lahan Karang Pring</td>
-                                    <td>500</td>
-                                    <td>Timun</td>
-                                    <td>Jl. Tapak Suci Karang Pring, Jember</td>
-                                    <td class="icon-list-demo row">
-                                        <div class="col-sm-6 col-md-6 col-lg-6 f-icon"><i class="fas fa-pencil-alt"></i>
-                                        </div>
-                                        <div class="col-sm-6 col-md-6 col-lg-6 f-icon"><i class="fas fa-trash-alt"></i>
-                                        </div>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Lahan Jenggawah</td>
-                                    <td>700</td>
-                                    <td>Cabai</td>
-                                    <td>Jl. Wirwodadi Jenggawah, Jember</td>
-                                    <td class="icon-list-demo row">
-                                        <div class="col-sm-6 col-md-6 col-lg-6 f-icon"><i class="fas fa-pencil-alt"></i>
-                                        </div>
-                                        <div class="col-sm-6 col-md-6 col-lg-6 f-icon"><i class="fas fa-trash-alt"></i>
-                                        </div>
-                                </tr>
-                                <th scope="row">4</th>
-                                <td>Lahan Bedadung</td>
-                                <td>300</td>
-                                <td>Semangka</td>
-                                <td>Jl. Sukarno Bedadung, Jember</td>
-                                <td class="icon-list-demo row">
-                                    <div class="col-sm-6 col-md-6 col-lg-6 f-icon"><i class="fas fa-pencil-alt"></i>
-                                    </div>
-                                    <div class="col-sm-6 col-md-6 col-lg-6 f-icon"><i class="fas fa-trash-alt"></i>
-                                    </div>
-                                    </tr>
-                                <th scope="row">5</th>
-                                <td>Lahan Jember Lor</td>
-                                <td>1200</td>
-                                <td>Padi</td>
-                                <td>Jl. Surbiyono Jember Lor, Jember</td>
-                                <td class="icon-list-demo row">
-                                    <div class="col-sm-6 col-md-6 col-lg-6 f-icon">
-                                        <i class="fas fa-pencil-alt"></i>
-                                    </div>
-                                    <div class="col-sm-6 col-md-6 col-lg-6 f-icon">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </div>
-                                    </tr>
-                            </tbody> -->
-                        </table>
-                        <div class="tombol m1-auto">
-                            <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Tambah Lahan</button> -->
-                            <button type="button" class="btn btn-primary text-white"data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fas fa-plus"
-                                style="color: white;"></i> Add New Lahan
-                            </button>
+          <h1 class="display-6 text-left" id="manajemenlahan">Manajemen Lahan</h1>
+          <div class="card-body">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">No</th>
+                  <th scope="col">Nama Lahan</th>
+                  <th scope="col">Luas Lahan (m)</th>
+                  <th scope="col">Jenis Tanaman yang Ditanam</th>
+                  <th scope="col">Lokasi Lahan</th>
+                  <th scope="col">Deskripsi</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for lahan in lahan_data %}
+                <tr>
+                  <td>{{ loop.index }}</td>
+                  <td>{{ lahan.nama }}</td>
+                  <td>{{ lahan.luas }}</td>
+                  <td>{{ lahan.jenis_tanaman }}</td>
+                  <td>{{ lahan.lokasi }}</td>
+                  <td>{{ lahan.deskripsi }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <div class="tombol m1-auto">
+              <button type="button" class="btn btn-primary text-white" data-bs-toggle="modal"
+                data-bs-target="#exampleModal"><i class="fas fa-plus" style="color: white;"></i> Add New Lahan
+              </button>
 
-                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                              <div class="modal-dialog">
-                                <div class="modal-content">
-                                  <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Masukkan  Data Lahan</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                  </div>
-                                  <div class="modal-body">
-                                    <form>
-                                      <div class="mb-3">
-                                        <label for="recipient-name" class="col-form-label">Nama Lahan:</label>
-                                        <input type="text" class="form-control" id="recipient-name">
-                                      </div>
-                                      <div class="mb-3">
-                                        <label for="recipient-name" class="col-form-label">Luas Lahan:</label>
-                                        <input type="number" class="form-control" id="recipient-name" min="0">
-                                      </div>
-                                      <div class="mb-3">
-                                        <label for="recipient-name" class="col-form-label">Jenis Tanaman:</label>
-                                        <input type="text" class="form-control" id="recipient-name">
-                                      </div>
-                                      <div class="mb-3">
-                                        <label for="recipient-name" class="col-form-label">Lokasi Lahan:</label>
-                                        <input type="text" class="form-control" id="recipient-name">
-                                      </div>
-                                    </form>
-                                  </div>
-                                  <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary" id="btnSubmit">Submit</button>
-
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                        </div>
+              <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">Masukkan Data Lahan</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+                    <div class="modal-body">
+                      <form>
+                        <div class="mb-3">
+                          <label for="recipient-name" class="col-form-label">Nama Lahan:</label>
+                          <input type="text" class="form-control" id="recipient-name">
+                        </div>
+                        <div class="mb-3">
+                          <label for="recipient-name" class="col-form-label">Luas Lahan:</label>
+                          <input type="number" class="form-control" id="recipient-name" min="0">
+                        </div>
+                        <div class="mb-3">
+                          <label for="recipient-name" class="col-form-label">Jenis Tanaman:</label>
+                          <input type="text" class="form-control" id="recipient-name">
+                        </div>
+                        <div class="mb-3">
+                          <label for="recipient-name" class="col-form-label">Lokasi Lahan:</label>
+                          <input type="text" class="form-control" id="recipient-name">
+                        </div>
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-primary" id="btnSubmit">Submit</button>
+
+                    </div>
+                  </div>
                 </div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 </div>
 {% endblock %}
-
-

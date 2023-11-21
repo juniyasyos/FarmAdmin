@@ -117,6 +117,12 @@
                             <option value="{{ nama }}">{{ nama }}</option>
                             {% endfor %}
                         </select>
+                        <select class="form-select shadow-none row border-top" id="selectStatus">
+                            <option value="semua">Semua Status</option>
+                            <option value="Belum Selesai">Belum Selesai</option>
+                            <option value="Progres">Progres</option>
+                            <option value="Selesai">Selesai</option>
+                        </select>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -133,14 +139,28 @@
                         </thead>
                         <tbody>
                             {% for pengeluaran, lahan, activity in list_aktifitas %}
-                            <tr data-lahan="{{ lahan.nama }}" data-status="{{ activity.status }}"
-                                data-keterangan="{{ lahan.keterangan }}">
-                                <td>{{ loop.index }}</td>
-                                <td class="txt-oflo">{{ pengeluaran.tanggal.strftime('%d %B') }}</td>
-                                <td>{{ lahan.nama }}</td>
-                                <td>{{ pengeluaran.jenis_aktivitas }}</td>
-                                <td><input type="checkbox"></td>
-                                <td>{{ activity.status }}</td>
+                            <tr data-lahan="{{ lahan.nama }}" data-status="{{ activity.status }}" data-keterangan="{{ lahan.keterangan }}" data-aktivitasid="{{ activity.id }}">
+                                <td class="text-wrap">{{ loop.index }}</td>
+                                <td class="txt-oflo">{{ pengeluaran.tanggal.strftime('%d %B %Y') }}</td>
+                                <td class="text-wrap">{{ lahan.nama }}</td>
+                                <td class="text-wrap">{{ pengeluaran.jenis_aktivitas }}</td>
+                                {% if activity.status == "Belum Selesai" %}
+                                <td class="justify-content-center"><button
+                                        class="btn btn-md status-button btn-block btn-danger"
+                                        onclick="changeStatus(this)">{{
+                                        activity.status }}</button></td>
+                                {% elif activity.status == "Progres" %}
+                                <td class="justify-content-center"><button
+                                        class="btn btn-md status-button btn-block btn-warning"
+                                        onclick="changeStatus(this)">{{
+                                        activity.status }}</button></td>
+                                {% elif activity.status == "Selesai" %}
+                                <td class="justify-content-center"><button
+                                        class="btn btn-md status-button btn-block btn-success"
+                                        onclick="changeStatus(this)">{{
+                                        activity.status }}</button></td>
+                                {% endif %}
+                                <td class="text-wrap">{{ pengeluaran.keterangan }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -162,10 +182,9 @@
                     <table class="table no-wrap">
                         <thead>
                             <tr>
-                                <th class="border-top-0">Nomor</th>
-                                <th class="border-top-0">Judul Panen</th>
+                                <th class="border-top-0">Tanggal</th>
                                 <th class="border-top-0">Komoditas</th>
-                                <th class="border-top-0">Harga</th>
+                                <th class="border-top-0">Harga per kw</th>
                                 <th class="border-top-0">Jumlah (kwintal)</th>
                                 <th class="border-top-0">Total</th>
                                 <th class="border-top-0">Keterangan</th>
@@ -174,16 +193,12 @@
                         <tbody>
                             {% for hasil_panen, pendapatan in list_pendapatan %}
                             <tr>
-                                <td>{{ loop.index }}</td>
-                                <td>{{ hasil_panen.judul_panen }}</td>
-                                <td>{{ pendapatan.nama_barang }}</td>
-                                <td><span class="txt-success format-number">{{ pendapatan.harga_barang | int}}</span>
-                                </td>
-                                <td><span class="txt-oflo">{{ pendapatan.jumlah }}</span></td>
-                                <td><span class="txt-oflo format-number">{{ (pendapatan.harga_barang *
-                                        pendapatan.jumlah)|int }}</span>
-                                </td>
-                                <td><span class="txt-oflo">{{ pendapatan.keterangan }}</span></td>
+                                <td class="text-wrap">{{ pendapatan.tanggal.strftime('%d %B %Y') }}</td>
+                                <td class="text-wrap">{{ pendapatan.nama_barang }}</td>
+                                <td class="text-wrap"><span class="txt-success format-number">{{ pendapatan.harga_barang | int}}</span></td>
+                                <td class="text-wrap"><span class="txt-oflo">{{ pendapatan.jumlah }}</span></td>
+                                <td class="text-wrap"><span class="txt-oflo format-number">{{ (pendapatan.harga_barang * pendapatan.jumlah)|int }}</span></td>
+                                <td class="text-wrap"><span class="txt-oflo">{{ pendapatan.keterangan }}</span></td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -198,30 +213,10 @@
     <div class="row">
         <div class="col-md-12 col-lg-12 col-sm-12">
             <div class="white-box">
-                <div class="d-md-flex mb-3">
-                    <h3 class="box-title mb-0">Histori Pengeluaran</h3>
-                    <div class="col-md-3 col-sm-4 col-xs-6 ms-auto">
-                        <select class="form-select shadow-none row border-top">
-                            <option>Januari 2023</option>
-                            <option>Februari 2023</option>
-                            <option>Maret 2023</option>
-                            <option>April 2023</option>
-                            <option>Mei 2023</option>
-                            <option>Juni 2023</option>
-                            <option>Juli 2023</option>
-                            <option>Agustus 2023</option>
-                            <option>September 2023</option>
-                            <option>Oktober 2023</option>
-                            <option>November 2023</option>
-                            <option>Desember 2023</option>
-                        </select>
-                    </div>
-                </div>
                 <div class="table-responsive">
                     <table class="table no-wrap">
                         <thead>
                             <tr>
-                                <th class="border-top-0">No</th>
                                 <th class="border-top-0">Tanggal</th>
                                 <th class="border-top-0">Lahan</th>
                                 <th class="border-top-0">Aktivitas</th>
@@ -232,13 +227,12 @@
                         <tbody>
                             {% for lahan, pengeluaran in list_pengeluaran %}
                             <tr>
-                                <td>{{ loop.index }}</td>
-                                <td class="txt-oflo">{{ pengeluaran.tanggal.strftime('%d %B') }}</td>
-                                <td>{{ lahan.nama }}</td>
-                                <td>{{ pengeluaran.jenis_aktivitas }}</td>
-                                <td><span class="txt-success format-number">{{ pengeluaran.total_pengeluaran | int
+                                <td class="txt-oflo">{{ pengeluaran.tanggal.strftime('%d %B %y') }}</td>
+                                <td class="text-wrap">{{ lahan.nama }}</td>
+                                <td class="text-wrap">{{ pengeluaran.jenis_aktivitas }}</td>
+                                <td class="text-wrap"><span class="txt-success format-number">{{ pengeluaran.total_pengeluaran | int
                                         }}</span></td>
-                                <td><span class="txt-oflo">{{ pengeluaran.keterangan }}</span></td>
+                                <td class="text-wrap"><span class="txt-oflo">{{ pengeluaran.keterangan }}</span></td>
                                 {% endfor %}
                         </tbody>
                     </table>
@@ -279,32 +273,95 @@
 
     document.addEventListener("DOMContentLoaded", function () {
         var selectLahan = document.getElementById("selectLahan");
+        var selectStatus = document.getElementById("selectStatus");
         var jadwalAktivitasTable = document.getElementById("jadwalAktivitasTable");
 
         // Save the header row as a reference outside the event listener
         var headerRow = jadwalAktivitasTable.querySelector("thead tr");
 
-        selectLahan.addEventListener("change", function () {
+        function updateTable() {
             var selectedLahan = selectLahan.value;
+            var selectedStatus = selectStatus.value;
 
             // Loop through rows, including the header row
             Array.from(jadwalAktivitasTable.getElementsByTagName("tr")).forEach(function (row) {
                 var lahanData = row.getAttribute("data-lahan");
+                var statusData = row.getAttribute("data-status");
 
                 // Display the header row regardless of the filter
                 if (row === headerRow) {
                     row.style.display = "table-row";
                 } else {
                     // Logika sesuai dengan kebutuhan Anda
-                    if (selectedLahan === "semua" || lahanData === selectedLahan) {
+                    var lahanMatch = selectedLahan === "semua" || lahanData === selectedLahan;
+                    var statusMatch = selectedStatus === "semua" || statusData === selectedStatus;
+
+                    if (lahanMatch && statusMatch) {
                         row.style.display = "table-row";
                     } else {
                         row.style.display = "none";
                     }
                 }
             });
-        });
+        }
+
+        // Event listeners untuk kedua dropdown
+        selectLahan.addEventListener("change", updateTable);
+        selectStatus.addEventListener("change", updateTable);
+
+        // Inisialisasi pembaruan tabel saat halaman dimuat
+        updateTable();
     });
+
+
+    function changeStatus(button) {
+        var status = button.textContent;
+        var aktivitasId = button.closest('tr').getAttribute('data-aktivitasid');
+
+    var data = { 'aktivitas_id': aktivitasId, 'new_status': getStatusAfterChange(status) };
+
+        fetch('/update_statusActivity', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(data => {
+                button.textContent = data.new_status;
+
+                switch (data.new_status) {
+                    case 'Belum Selesai':
+                        button.classList.remove('btn-warning', 'btn-success');
+                        button.classList.add('btn-danger');
+                        break;
+                    case 'Progres':
+                        button.classList.remove('btn-danger', 'btn-success');
+                        button.classList.add('btn-warning');
+                        break;
+                    case 'Selesai':
+                        button.classList.remove('btn-danger', 'btn-warning');
+                        button.classList.add('btn-success');
+                        break;
+                }
+            })
+            .catch(error => console.error(currentStatus))
+    }
+
+    function getStatusAfterChange(currentStatus) {
+        switch (currentStatus) {
+            case 'Belum Selesai':
+                return 'Progres';
+            case 'Progres':
+                return 'Selesai';
+            case 'Selesai':
+                return 'Belum Selesai';
+            default:
+                return currentStatus;
+        }
+    }
+
 
 
 </script>

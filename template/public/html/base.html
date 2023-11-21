@@ -72,7 +72,7 @@
                                 </clipPath>
                             </defs>
                         </svg>
-                        <span class="h2 d-flex align-items-center font-bold ml-2 mt-4">armAdmin</span>
+                        <span class="h2 align-items-center font-bold ml-2 mt-4 d-flex">armAdmin</span>
                     </a>
 
                     <a class="nav-toggler waves-effect waves-light text-dark d-block d-md-none"
@@ -126,17 +126,15 @@
         </aside>
         <div class="page-wrapper">
             <div class="page-breadcrumb bg-white">
-                <div class="row align-items-center">
+                <div class="row align-items-center d-flex">
                     <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
                         <h1 class="page-title">{% block path %}{% endblock %}</h1>
-                    </div>
-                    <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
                     </div>
                 </div>
             </div>
             {% block content %}
             {% endblock %}
-            <footer class="footer text-center"> 2023 © Kelompok 10 Functional Programming <a href="#">FARMADMIN.com</a>
+            <footer class="footer text-center"> 2023 © Kelompok 10 Functional Programming</a>
             </footer>
         </div>
     </div>

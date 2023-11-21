@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, redirect, url_for, request, flash
+from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
 from flask_login import LoginManager, login_required, login_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from models import *
@@ -32,23 +32,19 @@ class Controller_Application:
             if request.method == 'POST':
                 email, password = request.form.get('email'), request.form.get('password')
                 user = User.query.filter_by(email=email).first()
-
                 if user and check_password_hash(user.Password, password):
                     login_user(user)
                     return redirect(url_for('dashboard'))
                 else:
                     flash('Invalid email or password', 'error')
-
             return render_template('public/html/loginCoba.html', error=None)
 
 
         @self.app.route('/register', methods=['GET', 'POST'])
         def register():
             form = RegistrationForm()
-
             if form.validate_on_submit():
                 hashed_password = generate_password_hash(form.password.data, method='pbkdf2:sha1')
-
                 new_user = User(
                     email=form.email.data,
                     Nama_Lengkap=form.full_name.data,
@@ -59,10 +55,8 @@ class Controller_Application:
                 )
                 db.session.add(new_user)
                 db.session.commit()
-
                 flash('Your account has been created! You can now log in.', 'success')
                 return redirect(url_for('login'))
-
             return render_template('public/html/registerEx.html', form=form)
 
 
@@ -81,11 +75,26 @@ class Controller_Application:
                 'list_lahan' : list_lahan,
                 'chart_labels' : ["jan", "feb", "mar", "apr","mei","jun","jul","agus","sep","okt","nov","des"],
                 'chart_series' : Lahan.Pengeluaran_lahan_perbulan(current_user=user),
-                'list_aktifitas' : Aktivitas_Lahan.get_all(current_user=user),
-                'list_pengeluaran' : Pengeluaran.get_all(current_user=user),
-                'list_pendapatan' : Pendapatan.get_all(current_user=user)
+                'list_aktifitas' : Aktivitas_Lahan.get_all(current_user=user)[0:10],
+                'list_pengeluaran' : Pengeluaran.get_all(current_user=user)[0:10],
+                'list_pendapatan' : Pendapatan.get_all(current_user=user)[0:10]
                 }
             return render_template('public/html/Dashboard.html', **data)
+
+        
+        @self.app.route('/update_statusActivity', methods=["POST", "GET"])
+        @login_required
+        def update_statusActivity():
+            data = request.get_json()
+            activity_id = data['aktivitas_id']
+            new_status = data['new_status']
+            
+            aktivitas_lahan = Aktivitas_Lahan.query.get(activity_id)
+            if aktivitas_lahan:
+                aktivitas_lahan.status = new_status
+                db.session.commit()
+                return jsonify({'new_status': aktivitas_lahan.status})
+            return jsonify({'error': 'Aktivitas_Lahan tidak ditemukan'}), 404
 
 
         @self.app.route("/profile")
@@ -93,7 +102,6 @@ class Controller_Application:
         def profile():
             data = {
                 'profil_user' : user,
-              
                 }
             return render_template('public/html/profile.html', **data)
 
@@ -101,7 +109,6 @@ class Controller_Application:
         @self.app.route("/manajemen", methods=["GET", "POST"])
         @login_required
         def manajemen():
-        
             data = {
                 'profil_user': user,
                 'lahan_data': Lahan.get_all(current_user=user),
