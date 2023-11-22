@@ -213,6 +213,9 @@
     <div class="row">
         <div class="col-md-12 col-lg-12 col-sm-12">
             <div class="white-box">
+                <div class="d-md-flex mb-3">
+                    <h3 class="box-title mb-0">Histori Pengeluaran</h3>
+                </div>
                 <div class="table-responsive">
                     <table class="table no-wrap">
                         <thead>
@@ -225,7 +228,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for lahan, pengeluaran in list_pengeluaran %}
+                            {% for lahan, activity_lahan, pengeluaran in list_pengeluaran %}
                             <tr>
                                 <td class="txt-oflo">{{ pengeluaran.tanggal.strftime('%d %B %y') }}</td>
                                 <td class="text-wrap">{{ lahan.nama }}</td>

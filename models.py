@@ -104,8 +104,6 @@ class Lahan(db.Model, UserMixin):
         return db.session.query(Lahan).filter_by(user=current_user).all()
         
 
-
-
     def Pengeluaran_lahan_perbulan(current_user):
             result = (
                 db.session.query(
@@ -120,6 +118,8 @@ class Lahan(db.Model, UserMixin):
                 .group_by(Lahan.id, func.month(Pengeluaran.tanggal))
                 .all()
             )
+            
+            print(result)
 
             data_per_lahan = {}
 
@@ -127,14 +127,18 @@ class Lahan(db.Model, UserMixin):
                 lahan_id = row.lahan_id
                 bulan = row.bulan
                 total_pengeluaran = row.total_pengeluaran
+                
+                print(lahan_id," - ", bulan," - ",total_pengeluaran,"\n")
 
 
                 if lahan_id not in data_per_lahan:
+                    print("gk ada kategorinya dalam data_perlahan bang\n")
                     data_per_lahan[lahan_id] = {}
 
                 data_per_lahan[lahan_id][bulan] = total_pengeluaran
-
-            return list(map(lambda lahan_id: list(map(lambda bulan: data_per_lahan[lahan_id].get(bulan, 0) / 1000, range(1, 13))), data_per_lahan.keys()))
+                print(data_per_lahan,"\n")
+                
+            return list(map(lambda lahan_id: list(map(lambda bulan: data_per_lahan[lahan_id].get(bulan, 0), range(1, 13))), data_per_lahan.keys()))
 
 
 
@@ -177,16 +181,17 @@ class Pengeluaran(db.Model, UserMixin):
     total_pengeluaran = db.Column(db.DECIMAL(10, 2))
     keterangan = db.Column(db.TEXT)
     
+    @staticmethod
     def get_all(current_user):
         return (
-            db.session.query(Lahan,Pengeluaran)
-            .join(Aktivitas_Lahan, Aktivitas_Lahan.id == Pengeluaran.id)
-            .join(Lahan)
+            db.session.query(Lahan, Aktivitas_Lahan, Pengeluaran)
+            .join(Aktivitas_Lahan, Aktivitas_Lahan.lahan_id == Lahan.id)
+            .join(Pengeluaran, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id)
             .filter(Lahan.user_id == current_user.id)
             .order_by(desc(Pengeluaran.tanggal))
             .all()
         )
-    
+     
 
 class Aktivitas_Lahan(db.Model, UserMixin):
     __tablename__ = 'Aktivitas_Lahan'
