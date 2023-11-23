@@ -57,6 +57,16 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Register')
 
 
+class LahanForm(FlaskForm):
+    nama_lahan = StringField('Nama Lahan', validators=[DataRequired()])
+    lokasi_lahan = StringField('Lokasi Lahan', validators=[DataRequired()])
+    deskripsi_lahan = StringField('Deskripsi Lahan', validators=[DataRequired()])
+    luas_lahan = StringField('Luas Lahan', validators=[DataRequired()])
+    jenis_tanaman = StringField('Jenis Tanaman', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+    
+
+
 class User(db.Model, UserMixin):
     __tablename__ = 'User'
     id = db.Column(db.Integer, primary_key=True)
@@ -119,8 +129,7 @@ class Lahan(db.Model, UserMixin):
                 .all()
             )
             
-            print(result)
-
+            
             data_per_lahan = {}
 
             for row in result:
@@ -128,15 +137,13 @@ class Lahan(db.Model, UserMixin):
                 bulan = row.bulan
                 total_pengeluaran = row.total_pengeluaran
                 
-                print(lahan_id," - ", bulan," - ",total_pengeluaran,"\n")
-
-
+                
                 if lahan_id not in data_per_lahan:
                     print("gk ada kategorinya dalam data_perlahan bang\n")
                     data_per_lahan[lahan_id] = {}
 
                 data_per_lahan[lahan_id][bulan] = total_pengeluaran
-                print(data_per_lahan,"\n")
+                # print(data_per_lahan,"\n")
                 
             return list(map(lambda lahan_id: list(map(lambda bulan: data_per_lahan[lahan_id].get(bulan, 0), range(1, 13))), data_per_lahan.keys()))
 
@@ -191,7 +198,7 @@ class Pengeluaran(db.Model, UserMixin):
             .order_by(desc(Pengeluaran.tanggal))
             .all()
         )
-     
+    
 
 class Aktivitas_Lahan(db.Model, UserMixin):
     __tablename__ = 'Aktivitas_Lahan'
@@ -210,3 +217,5 @@ class Aktivitas_Lahan(db.Model, UserMixin):
             .order_by(desc(Pengeluaran.tanggal))
             .all()
         )
+        
+        

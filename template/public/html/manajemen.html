@@ -51,41 +51,41 @@
             </table>
             <div class="tombol m1-auto">
               <button type="button" class="btn btn-primary text-white" data-bs-toggle="modal"
-                data-bs-target="#exampleModal"><i class="fas fa-plus" style="color: white;"></i> Add New Lahan
+                data-bs-target="#ModalNewLahan"><i class="fas fa-plus" style="color: white;"></i> Tambah Lahan Baru
               </button>
 
-              <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+              <div class="modal fade" id="ModalNewLahan" tabindex="-1" aria-labelledby="ModalNewLahanLabel"
                 aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="exampleModalLabel">Masukkan Data Lahan</h1>
+                      <h1 class="modal-title fs-5" id="ModalNewLahanLabel">Masukkan Data Lahan</h1>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                      <form>
+                      <form method="POST" action="{{ url_for('manajemen') }}">
+                        {{ form.hidden_tag() }}
                         <div class="mb-3">
-                          <label for="recipient-name" class="col-form-label">Nama Lahan:</label>
-                          <input type="text" class="form-control" id="recipient-name">
+                          <label for="nama_lahan" class="col-form-label">Nama Lahan:</label>
+                          {{ form.nama_lahan(class="form-control", id="nama_lahan", required="required") }}
                         </div>
                         <div class="mb-3">
-                          <label for="recipient-name" class="col-form-label">Luas Lahan:</label>
-                          <input type="number" class="form-control" id="recipient-name" min="0">
+                          <label for="luas_lahan" class="col-form-label">Luas Lahan:</label>
+                          {{ form.luas_lahan(class="form-control", id="luas_lahan", required="required") }}
                         </div>
                         <div class="mb-3">
-                          <label for="recipient-name" class="col-form-label">Jenis Tanaman:</label>
-                          <input type="text" class="form-control" id="recipient-name">
+                          <label for="jenis" class="col-form-label">Jenis Tanaman:</label>
+                          {{ form.jenis_tanaman(class="form-control", id="jenis_tanaman", required="required") }}
                         </div>
                         <div class="mb-3">
-                          <label for="recipient-name" class="col-form-label">Lokasi Lahan:</label>
-                          <input type="text" class="form-control" id="recipient-name">
+                          <label for="lokasi_lahan" class="col-form-label">Lokasi Lahan:</label>
+                          {{ form.lokasi_lahan(class="form-control", id="lokasi_lahan", required="required") }}
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-primary" id="btnSubmit">Submit</button>
                         </div>
                       </form>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="button" class="btn btn-primary" id="btnSubmit">Submit</button>
-
                     </div>
                   </div>
                 </div>

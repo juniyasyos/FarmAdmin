@@ -4,6 +4,7 @@ from flask_login import LoginManager, login_required, login_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from models import *
 from flask_wtf import FlaskForm
+from flask_wtf.csrf import CSRFProtect
 from sqlalchemy import func, cast, Integer
 from icecream import ic
 
@@ -95,7 +96,7 @@ class Controller_Application:
                 db.session.commit()
                 return jsonify({'new_status': aktivitas_lahan.status})
             return jsonify({'error': 'Aktivitas_Lahan tidak ditemukan'}), 404
-
+                        
 
         @self.app.route("/profile")
         @login_required
@@ -109,10 +110,23 @@ class Controller_Application:
         @self.app.route("/manajemen", methods=["GET", "POST"])
         @login_required
         def manajemen():
+            form = LahanForm()
+            new_lahan = Lahan(
+                nama=form.nama_lahan.data,
+                lokasi=form.lokasi_lahan.data,
+                deskripsi=form.deskripsi_lahan.data,
+                luas=form.luas_lahan.data,
+                jenis_tanaman=form.jenis_tanaman.data,
+                user_id=current_user.id
+            );
+            if new_lahan.nama != None:
+                db.session.add(new_lahan)
+                db.session.commit()
+            
             data = {
                 'profil_user': user,
                 'lahan_data': Lahan.get_all(current_user=user),
-    
+                'form':form
                 }
             return render_template('public/html/manajemen.html', **data)
                 

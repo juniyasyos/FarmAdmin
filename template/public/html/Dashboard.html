@@ -139,7 +139,7 @@
                         </thead>
                         <tbody>
                             {% for pengeluaran, lahan, activity in list_aktifitas %}
-                            <tr data-lahan="{{ lahan.nama }}" data-status="{{ activity.status }}" data-keterangan="{{ lahan.keterangan }}" data-aktivitasid="{{ activity.id }}">
+                            <tr data-lahan="{{ lahan.id }}" data-status="{{ activity.status }}" data-keterangan="{{ lahan.keterangan }}" data-aktivitasid="{{ activity.id }}">
                                 <td class="text-wrap">{{ loop.index }}</td>
                                 <td class="txt-oflo">{{ pengeluaran.tanggal.strftime('%d %B %Y') }}</td>
                                 <td class="text-wrap">{{ lahan.nama }}</td>
@@ -147,18 +147,15 @@
                                 {% if activity.status == "Belum Selesai" %}
                                 <td class="justify-content-center"><button
                                         class="btn btn-md status-button btn-block btn-danger"
-                                        onclick="changeStatus(this)">{{
-                                        activity.status }}</button></td>
+                                        onclick="changeStatus(this)">{{ activity.status }}</button></td>
                                 {% elif activity.status == "Progres" %}
                                 <td class="justify-content-center"><button
                                         class="btn btn-md status-button btn-block btn-warning"
-                                        onclick="changeStatus(this)">{{
-                                        activity.status }}</button></td>
+                                        onclick="changeStatus(this)">{{ activity.status }}</button></td>
                                 {% elif activity.status == "Selesai" %}
                                 <td class="justify-content-center"><button
                                         class="btn btn-md status-button btn-block btn-success"
-                                        onclick="changeStatus(this)">{{
-                                        activity.status }}</button></td>
+                                        onclick="changeStatus(this)">{{ activity.status }}</button></td>
                                 {% endif %}
                                 <td class="text-wrap">{{ pengeluaran.keterangan }}</td>
                             </tr>
@@ -248,9 +245,8 @@
 {% block scripts %}
 <script>
     $(function () {
-        var labels = {{ chart_labels | tojson
-    }};
-    var seriesData = {{ chart_series | tojson }};
+        var labels = {{ chart_labels | tojson }};
+        var seriesData = {{ chart_series | tojson }};
 
     //ct-visits
     new Chartist.Line(
@@ -296,6 +292,8 @@
                     row.style.display = "table-row";
                 } else {
                     // Logika sesuai dengan kebutuhan Anda
+                    console.log("Lahan data : "+lahanData)
+                    console.log("Lahan terpilih : "+selectedLahan)
                     var lahanMatch = selectedLahan === "semua" || lahanData === selectedLahan;
                     var statusMatch = selectedStatus === "semua" || statusData === selectedStatus;
 
@@ -321,7 +319,7 @@
         var status = button.textContent;
         var aktivitasId = button.closest('tr').getAttribute('data-aktivitasid');
 
-    var data = { 'aktivitas_id': aktivitasId, 'new_status': getStatusAfterChange(status) };
+        var data = { 'aktivitas_id': aktivitasId, 'new_status': getStatusAfterChange(status) };
 
         fetch('/update_statusActivity', {
             method: 'POST',
