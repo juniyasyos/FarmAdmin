@@ -66,20 +66,24 @@
                       <form method="POST" action="{{ url_for('manajemen') }}">
                         {{ form.hidden_tag() }}
                         <div class="mb-3">
-                          <label for="nama_lahan" class="col-form-label">Nama Lahan:</label>
+                          <label for="nama_lahan" class="col-form-label">Nama Lahan</label>
                           {{ form.nama_lahan(class="form-control", id="nama_lahan", required="required") }}
                         </div>
                         <div class="mb-3">
-                          <label for="luas_lahan" class="col-form-label">Luas Lahan:</label>
+                          <label for="luas_lahan" class="col-form-label">Luas Lahan</label>
                           {{ form.luas_lahan(class="form-control", id="luas_lahan", required="required") }}
                         </div>
                         <div class="mb-3">
-                          <label for="jenis" class="col-form-label">Jenis Tanaman:</label>
+                          <label for="jenis" class="col-form-label">Jenis Tanaman</label>
                           {{ form.jenis_tanaman(class="form-control", id="jenis_tanaman", required="required") }}
                         </div>
                         <div class="mb-3">
-                          <label for="lokasi_lahan" class="col-form-label">Lokasi Lahan:</label>
+                          <label for="lokasi_lahan" class="col-form-label">Lokasi Lahan</label>
                           {{ form.lokasi_lahan(class="form-control", id="lokasi_lahan", required="required") }}
+                        </div>
+                        <div class="mb-3">
+                          <label for="deskripsi_lahan" class="col-form-label">Deskripsi Lahan</label>
+                          {{ form.deskripsi_lahan(class="form-control", id="deskripsi_lahan", required="required") }}
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
