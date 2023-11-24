@@ -139,7 +139,7 @@
                         </thead>
                         <tbody>
                             {% for pengeluaran, lahan, activity in list_aktifitas %}
-                            <tr data-lahan="{{ lahan.id }}" data-status="{{ activity.status }}" data-keterangan="{{ lahan.keterangan }}" data-aktivitasid="{{ activity.id }}">
+                            <tr data-lahan="{{ lahan.nama }}" data-status="{{ activity.status }}" data-keterangan="{{ lahan.keterangan }}" data-aktivitasid="{{ activity.id }}">
                                 <td class="text-wrap">{{ loop.index }}</td>
                                 <td class="txt-oflo">{{ pengeluaran.tanggal.strftime('%d %B %Y') }}</td>
                                 <td class="text-wrap">{{ lahan.nama }}</td>

@@ -129,8 +129,30 @@ class Controller_Application:
                 'form':form
                 }
             return render_template('public/html/manajemen.html', **data)
+
+        
+        @self.app.route("/update_lahan", methods=["POST"])
+        @login_required
+        def update_lahan():
+            data = request.json
+            lahan_id = data['id_lahan']
+            
+            data_lahan = Lahan.query.get(lahan_id)
+            
+            if data_lahan and data_lahan.user_id == current_user.id:
+                data_lahan.nama = data['nama_lahan']
+                data_lahan.luas = data['luas_lahan']
+                data_lahan.jenis_tanaman = data['jenis_tanaman']
+                data_lahan.lokasi = data['lokasi_lahan']
+                data_lahan.deskripsi = data['deskripsi_lahan']
                 
+                db.session.commit()
                 
+                return jsonify({'message': 'Data tanah berhasil diperbarui'})
+            
+            return jsonify({'error': 'Gagal edit data'}), 404
+        
+        
         @self.app.route('/')
         def homepage():
             return render_template('public/html/Homepage.html')

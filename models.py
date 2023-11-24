@@ -66,7 +66,6 @@ class LahanForm(FlaskForm):
     submit = SubmitField('Submit')
     
 
-
 class User(db.Model, UserMixin):
     __tablename__ = 'User'
     id = db.Column(db.Integer, primary_key=True)

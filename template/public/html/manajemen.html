@@ -20,9 +20,8 @@
   <div class="row">
     <div class="col-md-12">
       <div class="white-box">
-        <div class="container-fluid Manajemen Lahan pt-5 pb-5 Light text-align" ">
-                <div class=" container">
-          <h1 class="display-6 text-left" id="manajemenlahan">Manajemen Lahan</h1>
+        <div class="container-fluid pt-3 pb-3 Light text-align" ">
+          <h1 class=" display-6 text-left" id="manajemenlahan">Manajemen Lahan</h1>
           <div class="card-body">
             <table class="table">
               <thead>
@@ -38,22 +37,78 @@
               </thead>
               <tbody>
                 {% for lahan in lahan_data %}
-                <tr>
+                <tr data-id-lahan="{{ lahan.id }}" data-nama-lahan="{{ lahan.nama }}" data-luas-lahan="{{ lahan.luas }}"
+                  data-jenis-tanaman="{{ lahan.jenis_tanaman }}" data-lokasi="{{ lahan.lokasi }}"
+                  data-deskripsi="{{ lahan.deskripsi }}">
                   <td>{{ loop.index }}</td>
                   <td>{{ lahan.nama }}</td>
                   <td>{{ lahan.luas }}</td>
                   <td>{{ lahan.jenis_tanaman }}</td>
                   <td>{{ lahan.lokasi }}</td>
                   <td>{{ lahan.deskripsi }}</td>
+                  <td>
+                    <div class="m1-auto">
+                      <div class="row">
+                        <button class="col-6 btn btn-link text-primary" type="button" data-bs-toggle="modal"
+                          data-bs-target="#ModalEditLahan{{ loop.index }}">
+                          <i class="fas fa-pencil-alt"></i>
+                        </button>
+                      </div>
+                      <!-- modal edit -->
+                      <div class="modal fade" id="ModalEditLahan{{ loop.index }}" tabindex="-1"
+                        aria-labelledby="ModalEditLahanLabel{{ loop.index }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h1 class="modal-title fs-5" id="ModalEditLahanLabel{{ loop.index }}">Edit Data Lahan</h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <!-- Edit Lahan -->
+                              <form id="editForm">
+                                <div class="mb-3">
+                                  <label for="recipient-name" class="col-form-label">Nama Lahan</label>
+                                  <input type="text" class="form-control" id="recipient-name" value="{{ lahan.nama }}">
+                                </div>
+                                <div class="mb-3">
+                                  <label for="luas-lahan" class="col-form-label">Luas Lahan</label>
+                                  <input type="number" class="form-control" id="luas-lahan" min="0"
+                                    value="{{ lahan.luas }}">
+                                </div>
+                                <div class="mb-3">
+                                  <label for="jenis-tanaman" class="col-form-label">Jenis Tanaman</label>
+                                  <input type="text" class="form-control" id="jenis-tanaman"
+                                    value="{{ lahan.jenis_tanaman }}">
+                                </div>
+                                <div class="mb-3">
+                                  <label for="lokasi-lahan" class="col-form-label">Lokasi Lahan</label>
+                                  <input type="text" class="form-control" id="lokasi-lahan" value="{{ lahan.lokasi }}">
+                                </div>
+                                <div class="mb-3">
+                                  <label for="deskripsi-lahan" class="col-form-label">Deskripsi Lahan</label>
+                                  <input type="text" class="form-control" id="deskripsi-lahan"
+                                    value="{{ lahan.deskripsi }}">
+                                </div>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal
+                                </button>
+                                <button type="button" class="btn btn-primary" id="btnSubmit">Simpan Perubahan
+                                </button>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
                 </tr>
                 {% endfor %}
               </tbody>
             </table>
-            <div class="tombol m1-auto">
-              <button type="button" class="btn btn-primary text-white" data-bs-toggle="modal"
+            <div class="m1-auto" id="modalAddLahan">
+              <button type=" button" class="btn btn-primary text-white" data-bs-toggle="modal"
                 data-bs-target="#ModalNewLahan"><i class="fas fa-plus" style="color: white;"></i> Tambah Lahan Baru
               </button>
-
               <div class="modal fade" id="ModalNewLahan" tabindex="-1" aria-labelledby="ModalNewLahanLabel"
                 aria-hidden="true">
                 <div class="modal-dialog">
@@ -102,4 +157,52 @@
   </div>
 </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  $(document).ready(function () {
+    $('button[data-bs-toggle="modal"]').on('click', function () {
+      $('#btnSubmit').on('click', function () {
+        var idLahan = $(this).closest('tr').data('id-lahan');
+        var namaLahan = $('#recipient-name').val();
+        var luasLahan = $('#luas-lahan').val();
+        var jenisTanaman = $('#jenis-tanaman').val();
+        var lokasiLahan = $('#lokasi-lahan').val();
+        var deskripsiLahan = $('#deskripsi-lahan').val();
+
+        var data = {
+          'nama_lahan': namaLahan,
+          'luas_lahan': luasLahan,
+          'jenis_tanaman': jenisTanaman,
+          'lokasi_lahan': lokasiLahan,
+          'deskripsi_lahan': deskripsiLahan,
+          'id_lahan': idLahan
+        };
+
+        console.log(data)
+        fetch('/update_lahan', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+          .then(response => response.json())
+          .then(data => {
+            // Handle response from server, if needed
+            console.log('Response:', data);
+            // Close the modal or perform other actions
+            $('#ModalEditLahan').modal('hide');
+            location.reload()
+          })
+          .catch(error => {
+            // Handle errors
+            console.error('Error:', error);
+          });
+      });
+    });
+  });
+
+</script>
 {% endblock %}
