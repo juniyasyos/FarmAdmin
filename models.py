@@ -109,8 +109,9 @@ class Lahan(db.Model, UserMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('User.id'))
     user = db.relationship('User', backref=db.backref('lahans', lazy=True))
 
+    """"Functional Proggramming"""
     def get_all(current_user):
-        return db.session.query(Lahan).filter_by(user=current_user).all()
+        return list(filter(lambda lahan: lahan.user == current_user, Lahan.query.all()))
         
 
     def Pengeluaran_lahan_perbulan(current_user):

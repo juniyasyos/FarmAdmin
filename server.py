@@ -20,6 +20,7 @@ class Controller_Application:
         self.login_manager.login_view = 'dashboard'
         self.setup_user_loader()
         self.setup_routes()
+        
 
     def setup_user_loader(self):
         @self.login_manager.user_loader
