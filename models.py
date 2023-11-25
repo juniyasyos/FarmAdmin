@@ -197,9 +197,10 @@ class Pengeluaran(db.Model, UserMixin):
             .filter(Lahan.user_id == current_user.id)
             .all()
         )
-
-        filtered_result = filter(lambda item: item[0].user_id == current_user.id, query_result)
-        sorted_result = sorted(filtered_result, key=lambda item: item[2].tanggal, reverse=True)
+        sorted_result = sorted(filter(lambda item: item[0].user_id == current_user.id, query_result), key=lambda item: item[2].tanggal, reverse=True)
+    
+        # filtered_result = filter(lambda item: item[0].user_id == current_user.id, query_result) 
+        # sorted_result = sorted(filtered_result, key=lambda item: item[2].tanggal, reverse=True)
 
         return (list(sorted_result))
     
