@@ -190,14 +190,18 @@ class Pengeluaran(db.Model, UserMixin):
     
     @staticmethod
     def get_all(current_user):
-        return (
+        query_result = (
             db.session.query(Lahan, Aktivitas_Lahan, Pengeluaran)
             .join(Aktivitas_Lahan, Aktivitas_Lahan.lahan_id == Lahan.id)
             .join(Pengeluaran, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id)
             .filter(Lahan.user_id == current_user.id)
-            .order_by(desc(Pengeluaran.tanggal))
             .all()
         )
+
+        filtered_result = filter(lambda item: item[0].user_id == current_user.id, query_result)
+        sorted_result = sorted(filtered_result, key=lambda item: item[2].tanggal, reverse=True)
+
+        return (list(sorted_result))
     
 
 class Aktivitas_Lahan(db.Model, UserMixin):
