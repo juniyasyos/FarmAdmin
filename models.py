@@ -208,14 +208,10 @@ class Aktivitas_Lahan(db.Model, UserMixin):
     status = db.Column(db.String(255))
     id_panen = db.Column(db.Integer, db.ForeignKey('Hasil_Panen.id'))
     
-    def get_all(current_user):
-        return (
-            db.session.query(Pengeluaran, Lahan, Aktivitas_Lahan)
-            .join(Aktivitas_Lahan, Lahan.id == Aktivitas_Lahan.lahan_id)
-            .join(Pengeluaran, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id)
-            .filter(Lahan.user_id == current_user.id)
-            .order_by(desc(Pengeluaran.tanggal))
-            .all()
-        )
+    get_all = lambda current_user: list(map(lambda x: db.session.query(Pengeluaran, Lahan, Aktivitas_Lahan).join(Aktivitas_Lahan, Lahan.id == Aktivitas_Lahan.lahan_id).join(Pengeluaran, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id).filter(Lahan.user_id == current_user.id).order_by(desc(Pengeluaran.tanggal)).all(), [None]))[0]
+
+
+
+
         
         
