@@ -123,6 +123,28 @@ class Controller_Application:
             return render_template('public/html/profile.html', **data)
 
 
+        @self.app.route("/update_profile", methods=["POST"])
+        @login_required
+        def update_profile():
+            if request.method == "POST":
+                data = request.get_json()
+
+                try:
+                    current_user.email = data['email']
+                    current_user.Nama_Lengkap = data['nama_lengkap']
+                    current_user.Nama_Penggilan = data['nama_panggilan']
+                    current_user.Nomor_Telepon = data['nomor_telepon']
+                    current_user.Bio = data['bio']
+
+                    db.session.commit()
+
+                    return jsonify({'success': 'Update profil berhasil'})
+                except Exception as e:
+                    print(f"Error: {e}")
+                    return jsonify({'error': f'Gagal mengubah profil: {e}'}), 404
+        
+        
+
         # Manajemen route for managing user's land
         @self.app.route("/manajemen", methods=["GET", "POST"])
         @login_required

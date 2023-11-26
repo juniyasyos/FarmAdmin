@@ -20,12 +20,16 @@
     <div class="row">
         <div class="col-lg-4 col-xlg-3 col-md-12">
             <div class="white-box">
-                <div class="user-bg"> <img width="100%" alt="user"
-                        src="../static/plugins/images/large/img1.jpg">
+                <div class="user-bg"> <img width="100%" alt="user" src="">
                     <div class="overlay-box">
                         <div class="user-content">
-                            <a href="javascript:void(0)"><img src="../static/plugins/images/users/genu.jpg"
-                                    class="thumb-lg img-circle" alt="img"></a>
+                            {% if profil_user.image %}
+                            <a href="javascript:void(0)"><img src="{{ profil_user.image }}" alt="user-img" width="36"
+                                    class="img-circle" id="image_user"></a>
+                            {% else %}
+                            <a href="javascript:void(0)"><img src="../static/plugins/images/users/varun.jpg"
+                                    class="thumb-lg img-circle" alt="img" id="image_user"></a>
+                            {% endif %}
                             <h4 class="text-white mt-2">{{ profil_user.Nama_Penggilan }}</h4>
                             <h5 class="text-white mt-2">{{ profil_user.email }}</h5>
                         </div>
@@ -45,35 +49,44 @@
                         <div class="form-group mb-4">
                             <label class="col-md-12 p-0">Full Name</label>
                             <div class="col-md-12 border-bottom p-0">
-                                <input type="text" placeholder="{{ profil_user.Nama_Lengkap }}" class="form-control p-0 border-0">
+                                <input type="text" value="{{ profil_user.Nama_Lengkap }}"
+                                    class="form-control p-0 border-0" id="nama-lengkap">
                             </div>
                         </div>
                         <div class="form-group mb-4">
-                            <label for="exfarm-email" class="col-md-12 p-0">Email</label>
+                            <label class="col-md-12 p-0">Username</label>
                             <div class="col-md-12 border-bottom p-0">
-                                <input type="email" placeholder="{{ profil_user.email }}"
-                                    class="form-control p-0 border-0" name="exfarm-email" id="exfarm-email">
+                                <input type="text" value="{{ profil_user.Nama_Penggilan }}"
+                                    class="form-control p-0 border-0" id="nama-panggilan">
+                            </div>`
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="email" class="col-md-12 p-0">Email</label>
+                            <div class="col-md-12 border-bottom p-0">
+                                <input type="email" value="{{ profil_user.email }}" class="form-control p-0 border-0"
+                                    name="email" id="email">
                             </div>
                         </div>
                         <div class="form-group mb-4">
                             <label class="col-md-12 p-0">Phone</label>
                             <div class="col-md-12 border-bottom p-0">
-                                <input type="text" placeholder="{{ profil_user.Nomor_Telepon }}"
-                                    class="form-control p-0 border-0">
+                                <input type="text" value="{{ profil_user.Nomor_Telepon }}"
+                                    class="form-control p-0 border-0" id="phone-number">
                             </div>
                         </div>
                         <div class="form-group mb-4">
                             <label class="col-md-12 p-0">Bio</label>
                             <div class="col-md-12 border-bottom p-0">
-                                <textarea rows="5" class="form-control p-0 border-0">{{ profil_user.Bio }}</textarea>
+                                <textarea rows="5" class="form-control p-0 border-0"
+                                    id="bio-data">{{ profil_user.Bio }}</textarea>
                             </div>
                         </div>
                         <div class="form-group mb-4">
-                            <div class="form-group mb-4">
-                                <div class="col-sm-12">
-                                    <button class="btn btn-success">Update Profile</button>
-                                </div>
+                            <div class="col-sm-12">
+                                <button type="button" class="btn btn-primary" id="update_profile">Update
+                                    Profile</button>
                             </div>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -82,3 +95,38 @@
 </div>
 {% endblock %}
 
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        $('#update_profile').on('click', function () {
+            var nama_lengkap = $('#nama-lengkap').val();
+            var nama_panggilan = $('#nama-panggilan').val();
+            var email = $('#email').val();
+            var nomor_telepon = $('#phone-number').val();  // Perbaikan di sini
+            var bio = $('#bio-data').val();  // Menggunakan val() untuk textarea
+
+            var data = {
+                'nama_lengkap': nama_lengkap,
+                'nama_panggilan': nama_panggilan,
+                'email': email,
+                'nomor_telepon': nomor_telepon,
+                'bio': bio,
+            };
+
+            fetch('/update_profile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .catch(error => {
+                    console.log("Error:", error);
+                });
+            window.location.reload(true);
+        });
+    });
+
+</script>
+{% endblock %}

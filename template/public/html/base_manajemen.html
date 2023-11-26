@@ -187,7 +187,6 @@
           'id_lahan': idLahan
         };
 
-        console.log(data)
         fetch('/update_lahan', {
           method: 'POST',
           headers: {
@@ -197,8 +196,6 @@
         })
           .then(response => response.json())
           .then(data => {
-            // Handle response from server, if needed
-            console.log('Response:', data);
             // Close the modal or perform other actions
             $('#ModalEditLahan').modal('hide');
             location.reload()
