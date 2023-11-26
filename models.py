@@ -76,22 +76,30 @@ class User(db.Model, UserMixin):
     Password = db.Column(db.String(255), nullable=False)
     Bio = db.Column(db.TEXT)
 
-    def get_total_lahan(self):
-        return Lahan.query.filter_by(user_id=self.id).count()
+    # def get_total_lahan(self):
+    #     return Lahan.query.filter_by(user_id=self.id).count()
+    get_total_lahan = lambda user: sum(1 for _ in Lahan.query.filter_by(user_id=user.id))
 
-    def get_total_hasil_panen(self):
-        return Hasil_Panen.query.join(Lahan).filter(Lahan.user_id == self.id).count()
 
-    def get_total_pendapatan(self):
-        return db.session.query(func.sum(Pendapatan.harga_barang * Pendapatan.jumlah)).\
-            join(Hasil_Panen).join(Lahan).\
-            filter(Hasil_Panen.lahan_id == Lahan.id).filter(Lahan.user_id == self.id).\
-            scalar() or 0
+    # def get_total_hasil_panen(self):
+    #     return Hasil_Panen.query.join(Lahan).filter(Lahan.user_id == self.id).count()
+    get_total_hasil_panen = lambda user: sum(1 for _ in Hasil_Panen.query.join(Lahan).filter(Lahan.user_id == user.id))
 
-    def get_total_pengeluaran(self):
-        return db.session.query(func.sum(Pengeluaran.total_pengeluaran)).\
-            join(Aktivitas_Lahan, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id).\
-            join(Lahan).filter(Lahan.user_id == self.id).scalar() or 0
+
+    # def get_total_pendapatan(self):
+    #     return db.session.query(func.sum(Pendapatan.harga_barang * Pendapatan.jumlah)).\
+    #         join(Hasil_Panen).join(Lahan).\
+    #         filter(Hasil_Panen.lahan_id == Lahan.id).filter(Lahan.user_id == self.id).\
+    #         scalar() or 0
+    get_total_pendapatan = lambda user: db.session.query(func.sum(Pendapatan.harga_barang * Pendapatan.jumlah)).join(Hasil_Panen).join(Lahan).filter(Hasil_Panen.lahan_id == Lahan.id).filter(Lahan.user_id == user.id).scalar() or 0
+
+
+    # def get_total_pengeluaran(self):
+    #     return db.session.query(func.sum(Pengeluaran.total_pengeluaran)).\
+    #         join(Aktivitas_Lahan, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id).\
+    #         join(Lahan).filter(Lahan.user_id == self.id).scalar() or 0
+    get_total_pengeluaran = lambda user: db.session.query(func.sum(Pengeluaran.total_pengeluaran)).join(Aktivitas_Lahan, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id).join(Lahan).filter(Lahan.user_id == user.id).scalar() or 0
+
     
     def get_list_lahan(self):
         result = list(map(lambda x:str(x)[1:-1], Lahan.query.filter_by(user_id=self.id).all()))
@@ -109,8 +117,9 @@ class Lahan(db.Model, UserMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('User.id'))
     user = db.relationship('User', backref=db.backref('lahans', lazy=True))
 
+    """Functional Proggramming"""
     def get_all(current_user):
-        return db.session.query(Lahan).filter_by(user=current_user).all()
+        return list(filter(lambda lahan: lahan.user == current_user, Lahan.query.all()))
         
 
     def Pengeluaran_lahan_perbulan(current_user):
@@ -189,14 +198,20 @@ class Pengeluaran(db.Model, UserMixin):
     
     @staticmethod
     def get_all(current_user):
-        return (
+        query_result = (
             db.session.query(Lahan, Aktivitas_Lahan, Pengeluaran)
             .join(Aktivitas_Lahan, Aktivitas_Lahan.lahan_id == Lahan.id)
             .join(Pengeluaran, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id)
             .filter(Lahan.user_id == current_user.id)
-            .order_by(desc(Pengeluaran.tanggal))
             .all()
         )
+
+        sorted_result = sorted(filter(lambda item: item[0].user_id == current_user.id, query_result), key=lambda item: item[2].tanggal, reverse=True)
+
+        # filtered_result = filter(lambda item: item[0].user_id == current_user.id, query_result)
+        # sorted_result = sorted(filtered_result, key=lambda item: item[2].tanggal, reverse=True)
+
+        return (list(sorted_result))
     
 
 class Aktivitas_Lahan(db.Model, UserMixin):
@@ -207,14 +222,10 @@ class Aktivitas_Lahan(db.Model, UserMixin):
     status = db.Column(db.String(255))
     id_panen = db.Column(db.Integer, db.ForeignKey('Hasil_Panen.id'))
     
-    def get_all(current_user):
-        return (
-            db.session.query(Pengeluaran, Lahan, Aktivitas_Lahan)
-            .join(Aktivitas_Lahan, Lahan.id == Aktivitas_Lahan.lahan_id)
-            .join(Pengeluaran, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id)
-            .filter(Lahan.user_id == current_user.id)
-            .order_by(desc(Pengeluaran.tanggal))
-            .all()
-        )
+    get_all = lambda current_user: list(map(lambda x: db.session.query(Pengeluaran, Lahan, Aktivitas_Lahan).join(Aktivitas_Lahan, Lahan.id == Aktivitas_Lahan.lahan_id).join(Pengeluaran, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id).filter(Lahan.user_id == current_user.id).order_by(desc(Pengeluaran.tanggal)).all(), [None]))[0]
+
+
+
+
         
         
