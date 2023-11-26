@@ -10,27 +10,38 @@ from icecream import ic
 
 class Controller_Application:
     def __init__(self):
+        # Initialize Flask application
         self.app = Flask(__name__, template_folder='template')
         self.models = Models(self.app)
 
         # Set secret key from environment variables
         self.app.secret_key = os.environ.get('SECRET_KEY', 'default_secret_key')
 
+         # Initialize LoginManager for user authentication
         self.login_manager = LoginManager(self.app)
         self.login_manager.login_view = 'dashboard'
+        
+         # Setup user loader function for LoginManager
         self.setup_user_loader()
+        
+         # Setup routes for different endpoints
         self.setup_routes()
         
-
+        
+    # Define a user loader function for LoginManager
     def setup_user_loader(self):
         @self.login_manager.user_loader
         def load_user(user_id):
             return User.query.get(int(user_id))
 
+    
     def setup_routes(self):
+        
+        # Login route for user authentication
         user = current_user
         @self.app.route('/login', methods=['GET', 'POST'])
         def login():
+            # Handle user login
             if request.method == 'POST':
                 email, password = request.form.get('email'), request.form.get('password')
                 user = User.query.filter_by(email=email).first()
@@ -42,6 +53,7 @@ class Controller_Application:
             return render_template('public/html/loginCoba.html', error=None)
 
 
+        # Registration route for creating a new user account
         @self.app.route('/register', methods=['GET', 'POST'])
         def register():
             form = RegistrationForm()
@@ -62,6 +74,7 @@ class Controller_Application:
             return render_template('public/html/registerEx.html', form=form)
 
 
+        # Dashboard route to display user's dashboard
         @self.app.route('/Dashboard', methods=["GET", "POST"])
         @login_required
         def dashboard(): 
@@ -83,7 +96,8 @@ class Controller_Application:
                 }
             return render_template('public/html/Dashboard.html', **data)
 
-        
+
+        # Route to update the status of an activity
         @self.app.route('/update_statusActivity', methods=["POST", "GET"])
         @login_required
         def update_statusActivity():
@@ -97,8 +111,9 @@ class Controller_Application:
                 db.session.commit()
                 return jsonify({'new_status': aktivitas_lahan.status})
             return jsonify({'error': 'Aktivitas_Lahan tidak ditemukan'}), 404
-                        
 
+                        
+        # Profile route to display user's profile information
         @self.app.route("/profile")
         @login_required
         def profile():
@@ -108,6 +123,7 @@ class Controller_Application:
             return render_template('public/html/profile.html', **data)
 
 
+        # Manajemen route for managing user's land
         @self.app.route("/manajemen", methods=["GET", "POST"])
         @login_required
         def manajemen():
@@ -132,6 +148,7 @@ class Controller_Application:
             return render_template('public/html/base_manajemen.html', **data)
 
         
+        # Update route to update land information
         @self.app.route("/update_lahan", methods=["POST"])
         @login_required
         def update_lahan():
@@ -154,6 +171,7 @@ class Controller_Application:
             return jsonify({'error': 'Gagal edit data'}), 404
 
         
+         # Manajemen Lahan route to manage activities on a specific land
         @self.app.route("/manajemen_lahan/<id_lahan>", methods=["GET"])
         @login_required
         def manajemen_lahan(id_lahan):
@@ -168,19 +186,22 @@ class Controller_Application:
             return render_template('public/html/manajemen_lahan.html', **data)
             
         
-        
+        # Homepage route
         @self.app.route('/')
         def homepage():
             return render_template('public/html/Homepage.html')
 
-        import random
+
+        # Error handling for 404 Not Found
         @self.app.errorhandler(404)
         def page_not_found(error):
             return render_template(f'public/html/404.html')
 
     def run(self):
+         # Run the Flask application
         self.app.run(debug=True)
 
+# Instantiate the Controller_Application class
 if __name__ == '__main__':
     my_app = Controller_Application()
     my_app.run()
