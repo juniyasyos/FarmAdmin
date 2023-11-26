@@ -129,7 +129,7 @@ class Controller_Application:
                 'lahan_data': Lahan.get_all(current_user=user),
                 'form':form
                 }
-            return render_template('public/html/manajemen.html', **data)
+            return render_template('public/html/base_manajemen.html', **data)
 
         
         @self.app.route("/update_lahan", methods=["POST"])
@@ -152,6 +152,21 @@ class Controller_Application:
                 return jsonify({'message': 'Data tanah berhasil diperbarui'})
             
             return jsonify({'error': 'Gagal edit data'}), 404
+
+        
+        @self.app.route("/manajemen_lahan/<id_lahan>", methods=["GET"])
+        @login_required
+        def manajemen_lahan(id_lahan):
+            form_aktivitas = Aktivitas_LahanForm()
+            form_pengeluaran = PengeluaranForm()
+            
+            data = {
+                'profil_user': user,
+                'nama_lahan' : Lahan.query.filter_by(id=id_lahan, user_id=current_user.id).first().nama,
+                'data_aktivitas' : Aktivitas_Lahan.aktivitas_perlahan(id_lahan=id_lahan, current_user=current_user),
+                }
+            return render_template('public/html/manajemen_lahan.html', **data)
+            
         
         
         @self.app.route('/')

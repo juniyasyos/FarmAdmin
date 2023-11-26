@@ -17,19 +17,26 @@ load_dotenv()
 
 db = SQLAlchemy()
 
+# Deklarasi class Models
 class Models:
+    # Fungsi inisialisasi class
     def __init__(self, app=None, db_config=None):
+        # Memanggil fungsi init_app jika app telah diberikan
         if app:
             self.init_app(app, db_config)
 
+    # Fungsi inisialisasi app dan database
     def init_app(self, app, db_config=None):
+        # Menggunakan db_config default jika tidak diberikan
         if db_config is None:
             db_config = self.load_db_config()
 
+        # Konfigurasi URI database dan track modifications
         app.config['SQLALCHEMY_DATABASE_URI'] = self.get_database_uri(db_config)
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
         db.init_app(app)
 
+    # Fungsi untuk memuat konfigurasi database
     def load_db_config(self):
         return {
             'DB_HOST': os.getenv('DB_HOST'),
@@ -39,6 +46,7 @@ class Models:
             'DB_NAME': os.getenv('DB_NAME'),
         }
 
+    # Fungsi untuk mendapatkan URI database
     def get_database_uri(self, db_config):
         return (
             f"mysql+mysqlconnector://{db_config['DB_USER']}:{db_config['DB_PASSWORD']}@"
@@ -66,8 +74,13 @@ class LahanForm(FlaskForm):
     submit = SubmitField('Submit')
     
 
+
+# Deklarasi class User
 class User(db.Model, UserMixin):
+    # Nama tabel dalam database
     __tablename__ = 'User'
+    
+    # Definisi kolom-kolom dalam tabel User
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(30), unique=True, nullable=False)
     Nama_Lengkap = db.Column(db.String(80))
@@ -76,38 +89,24 @@ class User(db.Model, UserMixin):
     Password = db.Column(db.String(255), nullable=False)
     Bio = db.Column(db.TEXT)
 
-    # def get_total_lahan(self):
-    #     return Lahan.query.filter_by(user_id=self.id).count()
+    # Lambda functions untuk menghitung statistik
     get_total_lahan = lambda user: sum(1 for _ in Lahan.query.filter_by(user_id=user.id))
-
-
-    # def get_total_hasil_panen(self):
-    #     return Hasil_Panen.query.join(Lahan).filter(Lahan.user_id == self.id).count()
     get_total_hasil_panen = lambda user: sum(1 for _ in Hasil_Panen.query.join(Lahan).filter(Lahan.user_id == user.id))
-
-
-    # def get_total_pendapatan(self):
-    #     return db.session.query(func.sum(Pendapatan.harga_barang * Pendapatan.jumlah)).\
-    #         join(Hasil_Panen).join(Lahan).\
-    #         filter(Hasil_Panen.lahan_id == Lahan.id).filter(Lahan.user_id == self.id).\
-    #         scalar() or 0
     get_total_pendapatan = lambda user: db.session.query(func.sum(Pendapatan.harga_barang * Pendapatan.jumlah)).join(Hasil_Panen).join(Lahan).filter(Hasil_Panen.lahan_id == Lahan.id).filter(Lahan.user_id == user.id).scalar() or 0
-
-
-    # def get_total_pengeluaran(self):
-    #     return db.session.query(func.sum(Pengeluaran.total_pengeluaran)).\
-    #         join(Aktivitas_Lahan, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id).\
-    #         join(Lahan).filter(Lahan.user_id == self.id).scalar() or 0
     get_total_pengeluaran = lambda user: db.session.query(func.sum(Pengeluaran.total_pengeluaran)).join(Aktivitas_Lahan, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id).join(Lahan).filter(Lahan.user_id == user.id).scalar() or 0
 
-    
+    # Fungsi untuk mendapatkan list lahan yang dimiliki oleh user
     def get_list_lahan(self):
-        result = list(map(lambda x:str(x)[1:-1], Lahan.query.filter_by(user_id=self.id).all()))
-        return result
-            
+        result = list(map(lambda x: str(x)[1:-1], Lahan.query.filter_by(user_id=self.id).all()))
+        return result             
 
+
+# Deklarasi class Lahan
 class Lahan(db.Model, UserMixin):
+    # Nama tabel dalam database
     __tablename__ = 'Lahan'
+
+    # Definisi kolom-kolom dalam tabel Lahan
     id = db.Column(db.Integer, primary_key=True)
     nama = db.Column(db.String(255))
     lokasi = db.Column(db.String(255))
@@ -116,46 +115,52 @@ class Lahan(db.Model, UserMixin):
     jenis_tanaman = db.Column(db.String(255))
     user_id = db.Column(db.Integer, db.ForeignKey('User.id'))
     user = db.relationship('User', backref=db.backref('lahans', lazy=True))
-
-    """Functional Proggramming"""
+    
+    # Fungsi untuk mendapatkan semua lahan milik pengguna tertentu
     def get_all(current_user):
         return list(filter(lambda lahan: lahan.user == current_user, Lahan.query.all()))
-        
 
+    # Fungsi untuk menghitung total pengeluaran lahan per bulan
     def Pengeluaran_lahan_perbulan(current_user):
-            result = (
-                db.session.query(
-                    Lahan.id.label('lahan_id'),
-                    func.month(Pengeluaran.tanggal).label('bulan'),
-                    func.sum(Pengeluaran.total_pengeluaran).label('total_pengeluaran')
-                )
-                .select_from(Lahan)
-                .join(Aktivitas_Lahan, Lahan.id == Aktivitas_Lahan.lahan_id)
-                .join(Pengeluaran, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id)
-                .filter(Lahan.user_id == current_user.id)
-                .group_by(Lahan.id, func.month(Pengeluaran.tanggal))
-                .all()
+        result = (
+            db.session.query(
+                Lahan.id.label('lahan_id'),
+                func.month(Pengeluaran.tanggal).label('bulan'),
+                func.sum(Pengeluaran.total_pengeluaran).label('total_pengeluaran')
             )
-            
-            
-            data_per_lahan = {}
+            .select_from(Lahan)
+            .join(Aktivitas_Lahan, Lahan.id == Aktivitas_Lahan.lahan_id)
+            .join(Pengeluaran, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id)
+            .filter(Lahan.user_id == current_user.id)
+            .group_by(Lahan.id, func.month(Pengeluaran.tanggal))
+            .all()
+        )
 
-            for row in result:
-                lahan_id = row.lahan_id
-                bulan = row.bulan
-                total_pengeluaran = row.total_pengeluaran
-                
-                
-                if lahan_id not in data_per_lahan:
-                    print("gk ada kategorinya dalam data_perlahan bang\n")
-                    data_per_lahan[lahan_id] = {}
+        data_per_lahan = {}
 
-                data_per_lahan[lahan_id][bulan] = total_pengeluaran
-                # print(data_per_lahan,"\n")
-                
-            return list(map(lambda lahan_id: list(map(lambda bulan: data_per_lahan[lahan_id].get(bulan, 0), range(1, 13))), data_per_lahan.keys()))
+        for row in result:
+            lahan_id = row.lahan_id
+            bulan = row.bulan
+            total_pengeluaran = row.total_pengeluaran
 
+            if lahan_id not in data_per_lahan:
+                data_per_lahan[lahan_id] = {}
 
+            data_per_lahan[lahan_id][bulan] = total_pengeluaran
+
+        return list(map(lambda lahan_id: list(map(lambda bulan: data_per_lahan[lahan_id].get(bulan, 0), range(1, 13))), data_per_lahan.keys()))
+
+    # Fungsi untuk mendapatkan semua data yang dimiliki lahan
+    def get_data_lahan(self, lahan_id, current_user):
+        return (
+            db.session.query()
+            .select_from(Lahan, Lahan.id == lahan_id)
+            .join(Aktivitas_Lahan, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id)
+            .filter(Lahan.user_id == current_user.id)
+            .all()
+        )
+    
+    
 
 class Pendapatan(db.Model, UserMixin):
     __tablename__ = 'Pendapatan'
@@ -188,14 +193,25 @@ class Hasil_Panen(db.Model, UserMixin):
     judul_panen = db.Column(db.String(255))
 
 
+class PengeluaranForm(FlaskForm):
+    tanggalForm = db.Column(db.Date, nullable=False)
+    jenis_aktivitasForm = db.Column(db.String(255))
+    total_pengeluaranForm = db.Column(db.DECIMAL(10, 2))
+    keteranganForm = db.Column(db.TEXT)
+
+# Deklarasi class Pengeluaran
 class Pengeluaran(db.Model, UserMixin):
+    # Nama tabel dalam database
     __tablename__ = 'Pengeluaran'
+
+    # Definisi kolom-kolom dalam tabel Pengeluaran
     id = db.Column(db.Integer, primary_key=True)
     tanggal = db.Column(db.Date, nullable=False)
     jenis_aktivitas = db.Column(db.String(255))
     total_pengeluaran = db.Column(db.DECIMAL(10, 2))
     keterangan = db.Column(db.TEXT)
-    
+
+    # Fungsi untuk mendapatkan semua pengeluaran berdasarkan user
     @staticmethod
     def get_all(current_user):
         query_result = (
@@ -206,26 +222,52 @@ class Pengeluaran(db.Model, UserMixin):
             .all()
         )
 
+        # Mengurutkan hasil query berdasarkan tanggal dengan urutan descending
         sorted_result = sorted(filter(lambda item: item[0].user_id == current_user.id, query_result), key=lambda item: item[2].tanggal, reverse=True)
 
-        # filtered_result = filter(lambda item: item[0].user_id == current_user.id, query_result)
-        # sorted_result = sorted(filtered_result, key=lambda item: item[2].tanggal, reverse=True)
-
-        return (list(sorted_result))
+        return list(sorted_result)
     
+    
+class Aktivitas_LahanForm(FlaskForm):
+    lahan_idForm = db.Column(db.Integer, db.ForeignKey('Lahan.id'))
+    pengeluaran_idForm = db.Column(db.Integer, db.ForeignKey('Pengeluaran.id'))
+    statusForm = db.Column(db.String(255))
+    id_panenForm = db.Column(db.Integer, db.ForeignKey('Hasil_Panen.id'))
 
+
+# Deklarasi class Aktivitas_Lahan
 class Aktivitas_Lahan(db.Model, UserMixin):
+    # Nama tabel dalam database
     __tablename__ = 'Aktivitas_Lahan'
+
+    # Definisi kolom-kolom dalam tabel Aktivitas_Lahan
     id = db.Column(db.Integer, primary_key=True)
     lahan_id = db.Column(db.Integer, db.ForeignKey('Lahan.id'))
     pengeluaran_id = db.Column(db.Integer, db.ForeignKey('Pengeluaran.id'))
     status = db.Column(db.String(255))
     id_panen = db.Column(db.Integer, db.ForeignKey('Hasil_Panen.id'))
     
-    get_all = lambda current_user: list(map(lambda x: db.session.query(Pengeluaran, Lahan, Aktivitas_Lahan).join(Aktivitas_Lahan, Lahan.id == Aktivitas_Lahan.lahan_id).join(Pengeluaran, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id).filter(Lahan.user_id == current_user.id).order_by(desc(Pengeluaran.tanggal)).all(), [None]))[0]
+    # Fungsi untuk mendapatkan semua aktivitas lahan berdasarkan user
+    get_all = lambda current_user: list(map(
+        lambda x: db.session.query(Pengeluaran, Lahan, Aktivitas_Lahan)
+        .join(Aktivitas_Lahan, Lahan.id == Aktivitas_Lahan.lahan_id)
+        .join(Pengeluaran, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id)
+        .filter(Lahan.user_id == current_user.id)
+        .order_by(desc(Pengeluaran.tanggal))
+        .all(), [None]))[0]
 
+    @staticmethod
+    def aktivitas_perlahan(id_lahan, current_user):
+        return (
+            db.session.query(Lahan, Aktivitas_Lahan, Pengeluaran)
+            .join(Aktivitas_Lahan, Aktivitas_Lahan.lahan_id == Lahan.id)
+            .join(Pengeluaran, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id)
+            .filter(Lahan.user_id == current_user.id)
+            .filter(Lahan.id == id_lahan)
+            .all()
+        )
 
+        # Mengurutkan hasil query berdasarkan tanggal dengan urutan descending
+        sorted_result = sorted(filter(lambda item: item[0].user_id == current_user.id, query_result), key=lambda item: item[2].tanggal, reverse=True)
 
-
-        
-        
+        return list(sorted_result)

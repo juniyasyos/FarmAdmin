@@ -1,0 +1,59 @@
+{% extends 'public/html/base.html' %}
+
+{% block title %} FarmAdmin | Manajemen {% endblock %}
+
+{% block profile_info %}
+<a class="profile-pic" href="#">
+    {% if profil_user.image %}
+    <img src="{{ profil_user.image }}" alt="user-img" width="36" class="img-circle">
+    {% else %}
+    <img src="../static/plugins/images/users/varun.jpg" alt="user-img" width="36" class="img-circle">
+    {% endif %}
+    <span class="text-white font-medium">{{ profil_user.Nama_Penggilan }}</span>
+</a>
+{% endblock %}
+
+{% block path %} Manajemen Aktivitas Lahan {% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="white-box">
+                <div class="container-fluid pt-3 pb-3 Light text-align" ">
+          <h1 class=" display-6 text-left" id="manajemenlahan">Manajemen  Lahan : {{ nama_lahan }}</h1>
+                    <div class="card-body">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">No</th>
+                                    <th scope="col">Aktivitas</th>
+                                    <th scope="col">Pengeluaran</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Deskripsi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for lahan, aktivitas, pengeluaran in data_aktivitas %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ pengeluaran.jenis_aktivitas }}</td>
+                                    <td>{{ pengeluaran.tanggal }}</td>
+                                    <td>{{ pengeluaran.total_pengeluaran }}</td>
+                                    <td>{{ pengeluaran.keterangan }}</td>
+                                    <td>{{ aktivitas.statusy }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
