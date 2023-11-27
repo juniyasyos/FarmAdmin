@@ -13,6 +13,7 @@ class Controller_Application:
         # Initialize Flask application
         self.app = Flask(__name__, template_folder='template')
         self.models = Models(self.app)
+        self.operation = None
 
         # Set secret key from environment variables
         self.app.secret_key = os.environ.get('SECRET_KEY', 'default_secret_key')
@@ -30,13 +31,14 @@ class Controller_Application:
         
     # Define a user loader function for LoginManager
     def setup_user_loader(self):
+        self.operation = None
+        
         @self.login_manager.user_loader
         def load_user(user_id):
             return User.query.get(int(user_id))
 
     
     def setup_routes(self):
-        
         # Login route for user authentication
         user = current_user
         @self.app.route('/login', methods=['GET', 'POST'])
@@ -51,7 +53,6 @@ class Controller_Application:
                 else:
                     flash('Invalid email or password', 'error')
             return render_template('public/html/loginCoba.html', error=None)
-
 
         # Registration route for creating a new user account
         @self.app.route('/register', methods=['GET', 'POST'])
@@ -78,21 +79,22 @@ class Controller_Application:
         @self.app.route('/Dashboard', methods=["GET", "POST"])
         @login_required
         def dashboard(): 
+            self.operation = Operation(user.id)
             customColors = ["#98a6ad", "#41b3f9", "#f4c63d", "#d17905", "#453d3f", "#453d3f"];
-            list_lahan = list(map(lambda x,y: [x,y], user.get_list_lahan(), customColors))
+            list_lahan = list(map(lambda x,y: [x,y], self.operation.get_list_lahan(), customColors))
             
             data = {
                 'profil_user' : user,
-                'total_lahan': user.get_total_lahan(),
-                'total_hasil_panen': user.get_total_hasil_panen(),
-                'total_pendapatan': int(user.get_total_pendapatan()),
-                'total_pengeluaran': int(user.get_total_pengeluaran()),
+                'total_lahan': self.operation.get_total_lahan(),
+                'total_hasil_panen': self.operation.get_total_hasil_panen(),
+                'total_pendapatan': int(self.operation.get_total_pendapatan()),
+                'total_pengeluaran': int(self.operation.get_total_pengeluaran()),
                 'list_lahan' : list_lahan,
                 'chart_labels' : ["jan", "feb", "mar", "apr","mei","jun","jul","agus","sep","okt","nov","des"],
-                'chart_series' : Lahan.Pengeluaran_lahan_perbulan(current_user=user),
-                'list_aktifitas' : Aktivitas_Lahan.get_all(current_user=user)[0:10],
-                'list_pengeluaran' : Pengeluaran.get_all(current_user=user)[0:10],
-                'list_pendapatan' : Pendapatan.get_all(current_user=user)[0:10]
+                'chart_series' : self.operation.Pengeluaran_lahan_perbulan(),
+                'list_aktifitas' : self.operation.get_all_activity()[0:10],
+                'list_pengeluaran' : self.operation.get_all_pengeluaran()[0:10],
+                'list_pendapatan' : self.operation.get_all_pendapatan()[0:10]
                 }
             return render_template('public/html/Dashboard.html', **data)
 
@@ -149,6 +151,7 @@ class Controller_Application:
         @self.app.route("/manajemen", methods=["GET", "POST"])
         @login_required
         def manajemen():
+            self.operation = Operation(user.id)
             form = LahanForm()
             new_lahan = Lahan(
                 nama=form.nama_lahan.data,
@@ -164,7 +167,7 @@ class Controller_Application:
             
             data = {
                 'profil_user': user,
-                'lahan_data': Lahan.get_all(current_user=user),
+                'lahan_data': self.operation.get_all_lahan(),
                 'form':form
                 }
             return render_template('public/html/base_manajemen.html', **data)
@@ -197,15 +200,16 @@ class Controller_Application:
         @self.app.route("/manajemen_lahan/<id_lahan>", methods=["GET"])
         @login_required
         def manajemen_lahan(id_lahan):
+            self.operation = Operation(user.id)
             form_aktivitas = Aktivitas_LahanForm()
             form_pengeluaran = PengeluaranForm()
             
             data = {
                 'profil_user': user,
                 'nama_lahan' : Lahan.query.filter_by(id=id_lahan, user_id=current_user.id).first().nama,
-                'data_aktivitas' : Aktivitas_Lahan.aktivitas_perlahan(id_lahan=id_lahan, current_user=current_user),
+                'data_aktivitas' : self.operation.aktivitas_perlahan(id_lahan=id_lahan, current_user=current_user),
                 }
-            return render_template('public/html/manajemen_lahan.html', **data)
+            return render_template('public/html/manajemen_activity.html', **data)
             
         
         # Homepage route
