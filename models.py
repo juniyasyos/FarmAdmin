@@ -283,3 +283,4 @@ class Operation:
         sorted_result = sorted(filter(lambda item: item[0].user_id == current_user.id, query_result), key=lambda item: item[2].tanggal, reverse=True)
 
         return list(sorted_result)
+    
