@@ -164,35 +164,38 @@ class Aktivitas_Lahan(db.Model, UserMixin):
     status = db.Column(db.String(255))
     id_panen = db.Column(db.Integer, db.ForeignKey('Hasil_Panen.id'))
 
-# Class operasi FP
+# Class Functional Programming Operation 
 class Operation:
-    def __init__(self, user_id) -> None:
-        self.id = user_id
+    def __init__(self) -> None:
+        pass
+    
+    # Pure Function filtered lahan by id
+    def _filter_lahan(self, user, lahan_data):
+        return lahan_data.query.filter_by(user_id=user.id)
 
-    def _filter_lahan(self):
-        return Lahan.query.filter_by(user_id=self.id)
+    def get_total_lahan(self, user):
+        return self._filter_lahan(user, Lahan).count()
 
-    def get_total_lahan(self):
-        return self._filter_lahan().count()
+    def get_total_hasil_panen(self, user):
+        return Hasil_Panen.query.join(Lahan).filter(Lahan.user_id == user.id).count()
 
-    def get_total_hasil_panen(self):
-        return Hasil_Panen.query.join(Lahan).filter(Lahan.user_id == self.id).count()
+    def get_total_pendapatan(self, user):
+        return db.session.query(func.sum(Pendapatan.harga_barang * Pendapatan.jumlah)).join(Hasil_Panen).join(Lahan).filter(Hasil_Panen.lahan_id == Lahan.id).filter(Lahan.user_id == user.id).scalar() or 0
 
-    def get_total_pendapatan(self):
-        return db.session.query(func.sum(Pendapatan.harga_barang * Pendapatan.jumlah)).join(Hasil_Panen).join(Lahan).filter(Hasil_Panen.lahan_id == Lahan.id).filter(Lahan.user_id == self.id).scalar() or 0
+    def get_total_pengeluaran(self, user):
+        return db.session.query(func.sum(Pengeluaran.total_pengeluaran)).join(Aktivitas_Lahan, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id).join(Lahan).filter(Lahan.user_id == user.id).scalar() or 0
 
-    def get_total_pengeluaran(self):
-        return db.session.query(func.sum(Pengeluaran.total_pengeluaran)).join(Aktivitas_Lahan, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id).join(Lahan).filter(Lahan.user_id == self.id).scalar() or 0
-
-    def get_list_lahan(self):
-        return [str(lahan.nama) for lahan in self._filter_lahan().all()]
+    def get_list_lahan(self, user):
+        customColors = ["#98a6ad", "#41b3f9", "#f4c63d", "#d17905", "#453d3f", "#453d3f"]
+        data_lahan = [str(lahan.nama) for lahan in self._filter_lahan(user, Lahan).all()]
+        return list(map(lambda x,y: [x,y], data_lahan, customColors))
     
     # Fungsi untuk mendapatkan semua lahan milik pengguna tertentu
-    def get_all_lahan(self):
-        return list(filter(lambda lahan: lahan.user_id == self.id, Lahan.query.all()))
+    def get_all_lahan(self, user):
+        return list(filter(lambda lahan: lahan.user_id == user.id, lahan_data.query.all()))
 
     # Fungsi untuk menghitung total pengeluaran lahan per bulan
-    def Pengeluaran_lahan_perbulan(self):
+    def Pengeluaran_lahan_perbulan(self, user):
         result = (
             db.session.query(
                 Lahan.id.label('lahan_id'),
@@ -202,7 +205,7 @@ class Operation:
             .select_from(Lahan)
             .join(Aktivitas_Lahan, Lahan.id == Aktivitas_Lahan.lahan_id)
             .join(Pengeluaran, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id)
-            .filter(Lahan.user_id == self.id)
+            .filter(Lahan.user_id == user.id)
             .group_by(Lahan.id, func.month(Pengeluaran.tanggal))
             .all()
         )
@@ -227,44 +230,44 @@ class Operation:
             db.session.query()
             .select_from(Lahan, Lahan.id == lahan_id)
             .join(Aktivitas_Lahan, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id)
-            .filter(Lahan.user_id == self.id)
+            .filter(Lahan.user_id == user.id)
             .all()
         )
 
      # Fungsi untuk mendapatkan semua data pendapatan berdasarkan user
     
     # FUngsi untuk mendapatkan semua Pendapatan user
-    def get_all_pendapatan(self):
+    def get_all_pendapatan(self, user):
         return (
             db.session.query(Hasil_Panen, Pendapatan)
             .join(Hasil_Panen, Hasil_Panen.id == Pendapatan.hasil_panen_id)
-            .join(Lahan, Lahan.user_id == self.id)
+            .join(Lahan, Lahan.user_id == user.id)
             .order_by(desc(Pendapatan.tanggal))
             .all()
         )
     
     # Fungsi untuk mendapatkan semua pengeluaran berdasarkan user
-    def get_all_pengeluaran(self):
+    def get_all_pengeluaran(self, user):
         query_result = (
             db.session.query(Lahan, Aktivitas_Lahan, Pengeluaran)
             .join(Aktivitas_Lahan, Aktivitas_Lahan.lahan_id == Lahan.id)
             .join(Pengeluaran, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id)
-            .filter(Lahan.user_id == self.id)
+            .filter(Lahan.user_id == user.id)
             .all()
         )
 
         # Mengurutkan hasil query berdasarkan tanggal dengan urutan descending
-        sorted_result = sorted(filter(lambda item: item[0].user_id == self.id, query_result), key=lambda item: item[2].tanggal, reverse=True)
+        sorted_result = sorted(filter(lambda item: item[0].user_id == user.id, query_result), key=lambda item: item[2].tanggal, reverse=True)
 
         return list(sorted_result)
     
     # Fungsi untuk mendapatkan semua aktivitas lahan berdasarkan user
-    def get_all_activity(self):
+    def get_all_activity(self, user):
         return list(map(
             lambda x: db.session.query(Pengeluaran, Lahan, Aktivitas_Lahan)
             .join(Aktivitas_Lahan, Lahan.id == Aktivitas_Lahan.lahan_id)
             .join(Pengeluaran, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id)
-            .filter(Lahan.user_id == self.id)
+            .filter(Lahan.user_id == user.id)
             .order_by(desc(Pengeluaran.tanggal))
             .all(), [None]))[0]
 

@@ -79,22 +79,20 @@ class Controller_Application:
         @self.app.route('/Dashboard', methods=["GET", "POST"])
         @login_required
         def dashboard(): 
-            self.operation = Operation(user.id)
-            customColors = ["#98a6ad", "#41b3f9", "#f4c63d", "#d17905", "#453d3f", "#453d3f"];
-            list_lahan = list(map(lambda x,y: [x,y], self.operation.get_list_lahan(), customColors))
-            
+            self.operation = Operation()
+
             data = {
                 'profil_user' : user,
-                'total_lahan': self.operation.get_total_lahan(),
-                'total_hasil_panen': self.operation.get_total_hasil_panen(),
-                'total_pendapatan': int(self.operation.get_total_pendapatan()),
-                'total_pengeluaran': int(self.operation.get_total_pengeluaran()),
-                'list_lahan' : list_lahan,
+                'total_lahan': self.operation.get_total_lahan(user),
+                'total_hasil_panen': self.operation.get_total_hasil_panen(user),
+                'total_pendapatan': int(self.operation.get_total_pendapatan(user)),
+                'total_pengeluaran': int(self.operation.get_total_pengeluaran(user)),
+                'list_lahan' : self.operation.get_list_lahan(user),
                 'chart_labels' : ["jan", "feb", "mar", "apr","mei","jun","jul","agus","sep","okt","nov","des"],
-                'chart_series' : self.operation.Pengeluaran_lahan_perbulan(),
-                'list_aktifitas' : self.operation.get_all_activity()[0:10],
-                'list_pengeluaran' : self.operation.get_all_pengeluaran()[0:10],
-                'list_pendapatan' : self.operation.get_all_pendapatan()[0:10]
+                'chart_series' : self.operation.Pengeluaran_lahan_perbulan(user),
+                'list_aktifitas' : self.operation.get_all_activity(user)[0:10],
+                'list_pengeluaran' : self.operation.get_all_pengeluaran(user)[0:10],
+                'list_pendapatan' : self.operation.get_all_pendapatan(user)[0:10]
                 }
             return render_template('public/html/Dashboard.html', **data)
 
@@ -151,7 +149,7 @@ class Controller_Application:
         @self.app.route("/manajemen", methods=["GET", "POST"])
         @login_required
         def manajemen():
-            self.operation = Operation(user.id)
+            self.operation = Operation()
             form = LahanForm()
             new_lahan = Lahan(
                 nama=form.nama_lahan.data,
@@ -167,7 +165,7 @@ class Controller_Application:
             
             data = {
                 'profil_user': user,
-                'lahan_data': self.operation.get_all_lahan(),
+                'lahan_data': self.operation.get_all_lahan(user),
                 'form':form
                 }
             return render_template('public/html/base_manajemen.html', **data)
@@ -200,9 +198,9 @@ class Controller_Application:
         @self.app.route("/manajemen_lahan/<id_lahan>", methods=["GET"])
         @login_required
         def manajemen_lahan(id_lahan):
-            self.operation = Operation(user.id)
-            form_aktivitas = Aktivitas_LahanForm()
-            form_pengeluaran = PengeluaranForm()
+            self.operation = Operation()
+            form_aktivitas = Aktivitas_LahanForm(user)
+            form_pengeluaran = PengeluaranForm(user)
             
             data = {
                 'profil_user': user,
