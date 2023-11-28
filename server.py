@@ -37,7 +37,7 @@ class Controller_Application:
         def load_user(user_id):
             return User.query.get(int(user_id))
 
-    
+    # Function in Function Functional Programming
     def setup_routes(self):
         # Login route for user authentication
         user = current_user
@@ -68,8 +68,8 @@ class Controller_Application:
                     Password=hashed_password,
                     Bio=form.bio.data
                 )
-                db.session.add(new_user)
-                db.session.commit()
+                DB.session.add(new_user)
+                DB.session.commit()
                 flash('Your account has been created! You can now log in.', 'success')
                 return redirect(url_for('login'))
             return render_template('public/html/registerEx.html', form=form)
@@ -83,16 +83,16 @@ class Controller_Application:
 
             data = {
                 'profil_user' : user,
-                'total_lahan': self.operation.get_total_lahan(user),
-                'total_hasil_panen': self.operation.get_total_hasil_panen(user),
-                'total_pendapatan': int(self.operation.get_total_pendapatan(user)),
-                'total_pengeluaran': int(self.operation.get_total_pengeluaran(user)),
-                'list_lahan' : self.operation.get_list_lahan(user),
+                'total_lahan': self.operation.get_total_lahan(user, Lahan),
+                'total_hasil_panen': self.operation.get_total_hasil_panen(user, Hasil_Panen, Lahan),
+                'total_pendapatan': int(self.operation.get_total_pendapatan(user, Pendapatan, Hasil_Panen, Lahan)),
+                'total_pengeluaran': int(self.operation.get_total_pengeluaran(user, Pengeluaran, Aktivitas_Lahan, Lahan)),
+                'list_lahan' : self.operation.get_list_lahan(user, Lahan),
                 'chart_labels' : ["jan", "feb", "mar", "apr","mei","jun","jul","agus","sep","okt","nov","des"],
-                'chart_series' : self.operation.Pengeluaran_lahan_perbulan(user),
-                'list_aktifitas' : self.operation.get_all_activity(user)[0:10],
-                'list_pengeluaran' : self.operation.get_all_pengeluaran(user)[0:10],
-                'list_pendapatan' : self.operation.get_all_pendapatan(user)[0:10]
+                'chart_series' : self.operation.Pengeluaran_lahan_perbulan(user, Pengeluaran, Lahan, Aktivitas_Lahan),
+                'list_aktifitas' : self.operation.get_all_activity(user, Pengeluaran, Lahan, Aktivitas_Lahan)[0:10],
+                'list_pengeluaran' : self.operation.get_all_pengeluaran(user, Lahan, Aktivitas_Lahan, Pengeluaran)[0:10],
+                'list_pendapatan' : self.operation.get_all_pendapatan(user, Hasil_Panen, Pendapatan, Lahan)[0:10]
                 }
             return render_template('public/html/Dashboard.html', **data)
 
@@ -108,7 +108,7 @@ class Controller_Application:
             aktivitas_lahan = Aktivitas_Lahan.query.get(activity_id)
             if request.method == "POST":
                 aktivitas_lahan.status = new_status
-                db.session.commit()
+                DB.session.commit()
                 return jsonify({'new_status': aktivitas_lahan.status})
             return jsonify({'error': 'Aktivitas_Lahan tidak ditemukan'}), 404
 
@@ -136,7 +136,7 @@ class Controller_Application:
                     current_user.Nomor_Telepon = data['nomor_telepon']
                     current_user.Bio = data['bio']
 
-                    db.session.commit()
+                    DB.session.commit()
 
                     return jsonify({'success': 'Update profil berhasil'})
                 except Exception as e:
@@ -160,8 +160,8 @@ class Controller_Application:
                 user_id=current_user.id
             );
             if new_lahan.nama != None:
-                db.session.add(new_lahan)
-                db.session.commit()
+                DB.session.add(new_lahan)
+                DB.session.commit()
             
             data = {
                 'profil_user': user,
@@ -187,7 +187,7 @@ class Controller_Application:
                 data_lahan.lokasi = data['lokasi_lahan']
                 data_lahan.deskripsi = data['deskripsi_lahan']
                 
-                db.session.commit()
+                DB.session.commit()
                 
                 return jsonify({'message': 'Data tanah berhasil diperbarui'})
             
@@ -220,8 +220,8 @@ class Controller_Application:
                     keterangan=form_pengeluaran.keteranganForm.data
                 )
 
-                db.session.add(new_pengeluaran)
-                db.session.flush()  # ID pengeluaran dapat digunakan saat membuat aktivitas lahan baru
+                DB.session.add(new_pengeluaran)
+                DB.session.flush()  # ID pengeluaran dapat digunakan saat membuat aktivitas lahan baru
 
                 new_akctivity = Aktivitas_Lahan(
                     lahan_id=id_lahan,
@@ -229,8 +229,8 @@ class Controller_Application:
                     status=form_aktivitas.statusForm.data
                 )
 
-                db.session.add(new_akctivity)
-                db.session.commit()
+                DB.session.add(new_akctivity)
+                DB.session.commit()
 
             activity_type_choices = [
                 ('pembibitan', 'Pembibitan'),
@@ -294,7 +294,7 @@ class Controller_Application:
                 data_pengeluaran.keterangan = data['keterangan']
                 data_aktivitas.status = data['status_aktivitas']
                 
-                db.session.commit()
+                DB.session.commit()
                 return jsonify({'message': 'Data tanah berhasil diperbarui'})
             
             return jsonify({'error': 'Gagal edit data'}), 404
