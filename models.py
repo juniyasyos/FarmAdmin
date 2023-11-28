@@ -4,7 +4,7 @@ from sqlalchemy.orm import aliased
 from dotenv import load_dotenv
 from flask_login import UserMixin
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, DateField, SelectField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 from operator import itemgetter
 from functools import reduce
@@ -74,19 +74,47 @@ class LahanForm(FlaskForm):
     jenis_tanaman = StringField('Jenis Tanaman', validators=[DataRequired()])
     submit = SubmitField('Submit')
     
-# Form Create new activity
-class Aktivitas_LahanForm(FlaskForm):
-    lahan_idForm = db.Column(db.Integer, db.ForeignKey('Lahan.id'))
-    pengeluaran_idForm = db.Column(db.Integer, db.ForeignKey('Pengeluaran.id'))
-    statusForm = db.Column(db.String(255))
-    id_panenForm = db.Column(db.Integer, db.ForeignKey('Hasil_Panen.id'))
+class Aktivitas_LahanForm(FlaskForm):    
+    # Buat pilihan status aktivitas
+    status_activity_choices = [
+        ('Belum Selesai', 'Belum Selesai'),
+        ('Progres', 'Progres'),
+        ('Selesai', 'Selesai'),
+    ]
+
+    # Buat field Select untuk status aktivitas dan StringField untuk id_panen
+    statusForm = SelectField('Status Aktivitas', choices=status_activity_choices, validators=[DataRequired()])
     
 # Form Create new pengeluaran
 class PengeluaranForm(FlaskForm):
-    tanggalForm = db.Column(db.Date, nullable=False)
-    jenis_aktivitasForm = db.Column(db.String(255))
-    total_pengeluaranForm = db.Column(db.DECIMAL(10, 2))
-    keteranganForm = db.Column(db.TEXT)
+    activity_type_choices = [
+        ('pembibitan', 'Pembibitan'),
+        ('penanaman', 'Penanaman'),
+        ('pemeliharaan', 'Pemeliharaan Tanaman'),
+        ('pengendalian', 'Pengendalian Hama dan Penyakit'),
+        ('panen', 'Panen'),
+        ('pascapanen', 'Pascapanen'),
+        ('pengolahan-tanah', 'Pengolahan Tanah'),
+        ('pertanian-organik', 'Pertanian Organik'),
+        ('peternakan', 'Peternakan'),
+        ('perikanan', 'Perikanan'),
+        ('agroforestri', 'Agroforestri'),
+        ('irigasi', 'Irigasi'),
+        ('teknologi-pertanian', 'Penggunaan Teknologi Pertanian'),
+        ('pengolahan-hasil', 'Pengolahan Hasil Pertanian'),
+        ('pengembangan-varietas', 'Pengembangan Varietas Unggul'),
+        ('pasar-pertanian', 'Pasar Pertanian'),
+        ('penelitian-pengembangan', 'Penelitian dan Pengembangan'),
+        ('pengelolaan-sumber-daya', 'Pengelolaan Sumber Daya Alam'),
+        ('pendidikan-pertanian', 'Pendidikan Pertanian'),
+        ('pengelolaan-limbah', 'Pengelolaan Limbah Pertanian'),
+    ]
+
+    tanggalForm = DateField('Tanggal', validators=[DataRequired()])
+    jenis_aktivitasForm = SelectField('Jenis Aktivitas', choices=activity_type_choices)
+    total_pengeluaranForm = StringField('Total Pengeluaran', validators=[DataRequired()])
+    keteranganForm = StringField('Keterangan', validators=[DataRequired()])
+    submit = SubmitField('Submit')
 
 
 # Deklarasi entity User
@@ -198,7 +226,7 @@ class Operation:
     # Fungsi untuk menghitung total pengeluaran lahan per bulan
     def Pengeluaran_lahan_perbulan(self, user):
         # Query ke database untuk mendapatkan data pengeluaran per bulan per lahan
-        result = ic(
+        result = (
             db.session.query(
                 Lahan.id.label('lahan_id'),  # Menggunakan label untuk memberi nama pada hasil query
                 func.month(Pengeluaran.tanggal).label('bulan'),  # Mengambil bulan dari tanggal pengeluaran

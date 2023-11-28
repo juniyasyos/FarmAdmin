@@ -106,7 +106,7 @@ class Controller_Application:
             new_status = data['new_status']
             
             aktivitas_lahan = Aktivitas_Lahan.query.get(activity_id)
-            if aktivitas_lahan:
+            if request.method == "POST":
                 aktivitas_lahan.status = new_status
                 db.session.commit()
                 return jsonify({'new_status': aktivitas_lahan.status})
@@ -193,28 +193,118 @@ class Controller_Application:
             
             return jsonify({'error': 'Gagal edit data'}), 404
 
-        
-         # Manajemen Lahan route to manage activities on a specific land
-        @self.app.route("/manajemen_lahan/<id_lahan>", methods=["GET"])
+        # Manajemen Lahan route to manage activities on a specific land        
+        @self.app.route("/manajemen_lahan/<id_lahan>", methods=["GET", "POST"])
         @login_required
         def manajemen_lahan(id_lahan):
             self.operation = Operation()
-            form_aktivitas = Aktivitas_LahanForm(user)
-            form_pengeluaran = PengeluaranForm(user)
+            form_aktivitas = Aktivitas_LahanForm()
+            form_pengeluaran = PengeluaranForm()
             
+            # Debug New Data
+            # ic(form_aktivitas.statusForm.data)
+            
+            # ic(
+            #     form_pengeluaran.tanggalForm.data,
+            #     form_pengeluaran.jenis_aktivitasForm.data,
+            #     form_pengeluaran.total_pengeluaranForm.data,
+            #     form_pengeluaran.keteranganForm.data
+            #     )
+            
+
+            if request.method == "POST":
+                new_pengeluaran = Pengeluaran(
+                    tanggal=form_pengeluaran.tanggalForm.data,
+                    jenis_aktivitas=form_pengeluaran.jenis_aktivitasForm.data,
+                    total_pengeluaran=str(int(form_pengeluaran.total_pengeluaranForm.data)/1000),
+                    keterangan=form_pengeluaran.keteranganForm.data
+                )
+
+                db.session.add(new_pengeluaran)
+                db.session.flush()  # ID pengeluaran dapat digunakan saat membuat aktivitas lahan baru
+
+                new_akctivity = Aktivitas_Lahan(
+                    lahan_id=id_lahan,
+                    pengeluaran_id=new_pengeluaran.id,
+                    status=form_aktivitas.statusForm.data
+                )
+
+                db.session.add(new_akctivity)
+                db.session.commit()
+
+            activity_type_choices = [
+                ('pembibitan', 'Pembibitan'),
+                ('penanaman', 'Penanaman'),
+                ('pemeliharaan', 'Pemeliharaan Tanaman'),
+                ('pengendalian', 'Pengendalian Hama dan Penyakit'),
+                ('panen', 'Panen'),
+                ('pascapanen', 'Pascapanen'),
+                ('pengolahan-tanah', 'Pengolahan Tanah'),
+                ('pertanian-organik', 'Pertanian Organik'),
+                ('peternakan', 'Peternakan'),
+                ('perikanan', 'Perikanan'),
+                ('agroforestri', 'Agroforestri'),
+                ('irigasi', 'Irigasi'),
+                ('teknologi-pertanian', 'Penggunaan Teknologi Pertanian'),
+                ('pengolahan-hasil', 'Pengolahan Hasil Pertanian'),
+                ('pengembangan-varietas', 'Pengembangan Varietas Unggul'),
+                ('pasar-pertanian', 'Pasar Pertanian'),
+                ('penelitian-pengembangan', 'Penelitian dan Pengembangan'),
+                ('pengelolaan-sumber-daya', 'Pengelolaan Sumber Daya Alam'),
+                ('pendidikan-pertanian', 'Pendidikan Pertanian'),
+                ('pengelolaan-limbah', 'Pengelolaan Limbah Pertanian'),
+            ]
             data = {
                 'profil_user': user,
-                'nama_lahan' : Lahan.query.filter_by(id=id_lahan, user_id=current_user.id).first().nama,
-                'data_aktivitas' : self.operation.aktivitas_perlahan(id_lahan=id_lahan, current_user=current_user),
-                }
+                'nama_lahan': Lahan.query.filter_by(id=id_lahan, user_id=current_user.id).first().nama,
+                'data_aktivitas': self.operation.aktivitas_perlahan(id_lahan=id_lahan, current_user=current_user),
+                'form_activity': form_aktivitas,
+                'form_pengeluaran': form_pengeluaran,
+                'id_lahan': id_lahan,
+                'activity_type_choices': activity_type_choices
+            }
+
             return render_template('public/html/manajemen_activity.html', **data)
+        
+        
+        # Manajemen Lahan route to manage activities on a specific land        
+        @self.app.route("/update_activity", methods=["POST"])
+        @login_required
+        def update_activity():
+            # var data = {
+            #         'id_pengeluaran': id_pengeluaran,
+            #         'id_aktivitas': id_aktivitas,
+            #         'tanggal': tanggal,
+            #         'jenis_aktivitas': jenis_aktivitas,
+            #         'status_aktivitas': status_aktivitas,
+            #         'total_pengeluaran': total_pengeluaran,
+            #         'keterangan': keterangan
+            #     };
+            data = request.json
+            activity_id = data['id_aktivitas']
+            pengeluaran_id = data['id_pengeluaran']
             
+            data_pengeluaran = Pengeluaran.query.get(pengeluaran_id)
+            data_aktivitas = Aktivitas_Lahan.query.get(activity_id)
+            
+            if data_pengeluaran and data_aktivitas:
+                data_pengeluaran.tanggal = data['tanggal']
+                data_pengeluaran.jenis_aktivitas = data['jenis_aktivitas']
+                data_pengeluaran.total_pengeluaran = data['total_pengeluaran']
+                data_pengeluaran.keterangan = data['keterangan']
+                data_aktivitas.status = data['status_aktivitas']
+                
+                db.session.commit()
+                return jsonify({'message': 'Data tanah berhasil diperbarui'})
+            
+            return jsonify({'error': 'Gagal edit data'}), 404
+        
         
         # Homepage route
         @self.app.route('/')
         def homepage():
             return render_template('public/html/Homepage.html')
-
+        
 
         # Error handling for 404 Not Found
         @self.app.errorhandler(404)

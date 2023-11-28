@@ -20,8 +20,8 @@
     <div class="row">
         <div class="col-md-12">
             <div class="white-box">
-                <div class="container-fluid pt-3 pb-3 Light text-align" ">
-          <h1 class=" display-6 text-left" id="manajemenlahan">Manajemen  Lahan : {{ nama_lahan }}</h1>
+                <div class="container-fluid pt-3 pb-3 Light text-align">
+                    <h1 class=" display-6 text-left" id="manajemenlahan">Manajemen Lahan : {{ nama_lahan }}</h1>
                     <div class="card-body">
                         <table class="table table-hover">
                             <thead>
@@ -35,17 +35,180 @@
                             </thead>
                             <tbody>
                                 {% for lahan, aktivitas, pengeluaran in data_aktivitas %}
-                                <tr>
+                                <tr data-aktivitas-id="{{ aktivitas.id }}" data-pengeluaran-id="{{ pengeluaran.id }}"
+                                    data-jenis-aktivitas="{{ pengeluaran.jenis_aktivitas }}"
+                                    data-tanggal="{{ pengeluaran.tanggal }}"
+                                    data-total-pengeluaran="{{ pengeluaran.total_pengeluaran }}"
+                                    data-keterangan="{{ pengeluaran.keterangan }}"
+                                    data-aktivitas-status="{{ aktivitas.status }}">
                                     <td>{{ loop.index }}</td>
                                     <td>{{ pengeluaran.jenis_aktivitas }}</td>
                                     <td>{{ pengeluaran.tanggal }}</td>
-                                    <td>{{ pengeluaran.total_pengeluaran }}</td>
+                                    <td>{{ pengeluaran.total_pengeluaran | int}}</td>
                                     <td>{{ pengeluaran.keterangan }}</td>
-                                    <td>{{ aktivitas.statusy }}</td>
+                                    <td>{{ aktivitas.status }}</td>
+                                    <td>
+                                        <div class="m1-auto">
+                                            <div class="row">
+                                                <button class="col-6 btn btn-link text-primary" type="button"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#ModalEditActivity{{ loop.index }}">
+                                                    <i class="fas fa-pencil-alt"></i>
+                                                </button>
+                                            </div>
+                                            <!-- modal edit -->
+                                            <div class="modal fade" id="ModalEditActivity{{ loop.index }}" tabindex="-1"
+                                                aria-labelledby="ModalEditActivityLabel{{ loop.index }}"
+                                                aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5"
+                                                                id="ModalEditActivityLabel{{ loop.index }}">
+                                                                Edit Data Aktivitas
+                                                            </h1>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close">
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <!-- Edit Aktivity -->
+                                                            <form id="editForm">
+                                                                <div class="mb-3">
+                                                                    <label for="jenis_activity"
+                                                                        class="col-form-label">Jenis Aktivitas</label>
+                                                                    <select class="form-select" id="jenis_activity">
+                                                                        {% for activity in activity_type_choices %}
+                                                                        <option value="{{ activity[0] }}">{{ activity[1]
+                                                                            }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label for="date_activity"
+                                                                        class="col-form-label">Tanggal</label>
+                                                                    <input type="date" class="form-control"
+                                                                        id="date_activity"
+                                                                        value="{{  pengeluaran.tanggal }}">
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label for="pengeluaran_activity"
+                                                                        class="col-form-label">Pengeluaran</label>
+                                                                    <input type="number" class="form-control"
+                                                                        id="pengeluaran_activity"
+                                                                        value="{{ pengeluaran.total_pengeluaran }}">
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label for="status_activity"
+                                                                        class="col-form-label">Status</label>
+                                                                    <select class="form-select" id="status_activity">
+                                                                        <option value="Belum Selesai">Belum Selesai
+                                                                        </option>
+                                                                        <option value="Progres">Progres</option>
+                                                                        <option value="Selesai">Selesai</option>
+                                                                    </select>
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label for="keterangan_pengeluaran"
+                                                                        class="col-form-label">Deskripsi</label>
+                                                                    <textarea class="form-control"
+                                                                        id="keterangan_pengeluaran"
+                                                                        rows="3">{{ pengeluaran.keterangan }}</textarea>
+                                                                </div>
+
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">
+                                                                    Batal
+                                                                </button>
+                                                                <button type="button" class="btn btn-primary"
+                                                                    id="btnSubmit">
+                                                                    Simpan Perubahan
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
+                        <div class="m1-auto" id="modalAddActivity">
+                            <button type=" button" class="btn btn-primary text-white" data-bs-toggle="modal"
+                                data-bs-target="#ModalNewActivity"><i class="fas fa-plus" style="color: white;"></i>
+                                Tambah Aktifitas Baru
+                            </button>
+                            <div class="modal fade" id="ModalNewActivity" tabindex="-1"
+                                aria-labelledby="ModalNewActivityLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="ModalNewActivityLabel">Masukkan Aktivitas
+                                                Lahan Baru
+                                            </h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="POST"
+                                                action="{{ url_for('manajemen_lahan', id_lahan=id_lahan) }}">
+                                                {{ form_pengeluaran.hidden_tag() }}
+                                                {{ form_activity.hidden_tag() }}
+
+                                                <div class="mb-3">
+                                                    <label for="activity_date" class="col-form-label">Tanggal</label>
+                                                    {{ form_pengeluaran.tanggalForm(class="form-control",
+                                                    id="activity_date", required="required") }}
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="activity_type" class="col-form-label">Jenis
+                                                        Aktivitas</label>
+                                                    {{ form_pengeluaran.jenis_aktivitasForm(class="form-select
+                                                    shadow-none row border-top
+                                                    col-form-label", id="activity_type", required="required") }}
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="status_activity" class="col-form-label">Status
+                                                        Aktivitas</label>
+                                                    {{ form_activity.statusForm(class="form-select shadow-none row
+                                                    border-top", id="status_activity", required="required") }}
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="total_pengeluaran" class="col-form-label">Total
+                                                        Pengeluaran</label>
+                                                    {{ form_pengeluaran.total_pengeluaranForm(class="form-control",
+                                                    id="total_pengeluaran",
+                                                    required="required") }}
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="keterangan" class="col-form-label">Deskripsi
+                                                        Aktifitas</label>
+                                                    {{ form_pengeluaran.keteranganForm(class="form-control",
+                                                    id="keterangan", required="required") }}
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary"
+                                                        id="btnSubmit">Submit</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -56,4 +219,47 @@
 {% endblock %}
 
 {% block scripts %}
+<script>
+    $(document).ready(function () {
+        $('button[data-bs-toggle="modal"]').on('click', function () {
+            $('#btnSubmit').on('click', function () {
+                var id_pengeluaran = $(this).closest('tr').data('pengeluaran-id');
+                var id_aktivitas = $(this).closest('tr').data('aktivitas-id');
+                var tanggal = $('#date_activity').val();  // Perubahan di sini
+                var jenis_aktivitas = $('#jenis_activity').val();  // Perubahan di sini
+                var status_aktivitas = $('#status_activity').val();
+                var total_pengeluaran = $('#pengeluaran_activity').val();  // Perubahan di sini
+                var keterangan = $('#keterangan_pengeluaran').val();  // Perubahan di sini
+
+                var data = {
+                    'id_pengeluaran': id_pengeluaran,
+                    'id_aktivitas': id_aktivitas,
+                    'tanggal': tanggal,
+                    'jenis_aktivitas': jenis_aktivitas,
+                    'status_aktivitas': status_aktivitas,
+                    'total_pengeluaran': total_pengeluaran,
+                    'keterangan': keterangan
+                };
+
+                fetch('/update_activity', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Close the modal or perform other actions
+                        $('#ModalEditActivity').modal('hide');
+                        location.reload()
+                    })
+                    .catch(error => {
+                        // Handle errors
+                        console.error('Error:', error);
+                    });
+            });
+        });
+    });
+</script>
 {% endblock %}
