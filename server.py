@@ -165,7 +165,7 @@ class Controller_Application:
             
             data = {
                 'profil_user': user,
-                'lahan_data': self.operation.get_all_lahan(user),
+                'lahan_data': self.operation.get_all_lahan(user, Lahan),
                 'form':form
                 }
             return render_template('public/html/base_manajemen.html', **data)

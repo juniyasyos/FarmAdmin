@@ -191,27 +191,30 @@ class Operation:
         return list(map(lambda x,y: [x,y], data_lahan, customColors))
     
     # Fungsi untuk mendapatkan semua lahan milik pengguna tertentu
-    def get_all_lahan(self, user):
+    # Pure function
+    def get_all_lahan(self, user, lahan_data):
         return list(filter(lambda lahan: lahan.user_id == user.id, lahan_data.query.all()))
 
     # Fungsi untuk menghitung total pengeluaran lahan per bulan
     def Pengeluaran_lahan_perbulan(self, user):
-        result = (
+        # Query ke database untuk mendapatkan data pengeluaran per bulan per lahan
+        result = ic(
             db.session.query(
-                Lahan.id.label('lahan_id'),
-                func.month(Pengeluaran.tanggal).label('bulan'),
-                func.sum(Pengeluaran.total_pengeluaran).label('total_pengeluaran')
+                Lahan.id.label('lahan_id'),  # Menggunakan label untuk memberi nama pada hasil query
+                func.month(Pengeluaran.tanggal).label('bulan'),  # Mengambil bulan dari tanggal pengeluaran
+                func.sum(Pengeluaran.total_pengeluaran).label('total_pengeluaran')  # Mengambil total pengeluaran
             )
             .select_from(Lahan)
             .join(Aktivitas_Lahan, Lahan.id == Aktivitas_Lahan.lahan_id)
             .join(Pengeluaran, Aktivitas_Lahan.pengeluaran_id == Pengeluaran.id)
             .filter(Lahan.user_id == user.id)
-            .group_by(Lahan.id, func.month(Pengeluaran.tanggal))
+            .group_by(Lahan.id, func.month(Pengeluaran.tanggal))  # Mengelompokkan hasil query berdasarkan bulan dan lahan
             .all()
         )
 
         data_per_lahan = {}
 
+        # Mengorganisir hasil query ke dalam struktur data yang diinginkan
         for row in result:
             lahan_id = row.lahan_id
             bulan = row.bulan
@@ -222,6 +225,7 @@ class Operation:
 
             data_per_lahan[lahan_id][bulan] = total_pengeluaran
 
+        # Mengubah struktur data menjadi list untuk setiap lahan dan bulan
         return list(map(lambda lahan_id: list(map(lambda bulan: data_per_lahan[lahan_id].get(bulan, 0), range(1, 13))), data_per_lahan.keys()))
 
     # Fungsi untuk mendapatkan semua data yang dimiliki lahan
