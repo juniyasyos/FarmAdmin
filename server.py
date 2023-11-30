@@ -177,10 +177,12 @@ class Controller_Application:
         def update_lahan():
             data = request.json
             lahan_id = data['id_lahan']
+            ic(lahan_id)
+            ic(data)
             
             data_lahan = Lahan.query.get(lahan_id)
-            
-            if data_lahan and data_lahan.user_id == current_user.id:
+            ic(data_lahan)
+            if data_lahan.user_id == current_user.id:
                 data_lahan.nama = data['nama_lahan']
                 data_lahan.luas = data['luas_lahan']
                 data_lahan.jenis_tanaman = data['jenis_tanaman']
@@ -216,7 +218,7 @@ class Controller_Application:
                 new_pengeluaran = Pengeluaran(
                     tanggal=form_pengeluaran.tanggalForm.data,
                     jenis_aktivitas=form_pengeluaran.jenis_aktivitasForm.data,
-                    total_pengeluaran=str(int(form_pengeluaran.total_pengeluaranForm.data)/1000),
+                    total_pengeluaran=str(int(form_pengeluaran.total_pengeluaranForm.data)/1000_000),
                     keterangan=form_pengeluaran.keteranganForm.data
                 )
 
@@ -290,7 +292,7 @@ class Controller_Application:
             if data_pengeluaran and data_aktivitas:
                 data_pengeluaran.tanggal = data['tanggal']
                 data_pengeluaran.jenis_aktivitas = data['jenis_aktivitas']
-                data_pengeluaran.total_pengeluaran = data['total_pengeluaran']
+                data_pengeluaran.total_pengeluaran = str(int(data['total_pengeluaran'])/1000000)
                 data_pengeluaran.keterangan = data['keterangan']
                 data_aktivitas.status = data['status_aktivitas']
                 

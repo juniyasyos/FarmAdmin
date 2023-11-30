@@ -77,6 +77,7 @@ class LahanForm(FlaskForm):
     
 class Aktivitas_LahanForm(FlaskForm):    
     # Buat pilihan status aktivitas
+    # FP immutable
     status_activity_choices = (
         ('Belum Selesai', 'Belum Selesai'),
         ('Progres', 'Progres'),

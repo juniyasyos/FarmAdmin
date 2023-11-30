@@ -44,7 +44,7 @@
                                     <td>{{ loop.index }}</td>
                                     <td>{{ pengeluaran.jenis_aktivitas }}</td>
                                     <td>{{ pengeluaran.tanggal }}</td>
-                                    <td>{{ pengeluaran.total_pengeluaran | int}}</td>
+                                    <td>{{ pengeluaran.total_pengeluaran}} juta</td>
                                     <td>{{ pengeluaran.keterangan }}</td>
                                     <td>{{ aktivitas.status }}</td>
                                     <td>
@@ -98,7 +98,7 @@
                                                                         class="col-form-label">Pengeluaran</label>
                                                                     <input type="number" class="form-control"
                                                                         id="pengeluaran_activity"
-                                                                        value="{{ pengeluaran.total_pengeluaran }}">
+                                                                        value="{{ (pengeluaran.total_pengeluaran * 1000000) | int}}">
                                                                 </div>
 
                                                                 <div class="mb-3">
@@ -220,45 +220,47 @@
 
 {% block scripts %}
 <script>
-    $(document).ready(function () {
-        $('button[data-bs-toggle="modal"]').on('click', function () {
-            $('#btnSubmit').on('click', function () {
-                var id_pengeluaran = $(this).closest('tr').data('pengeluaran-id');
-                var id_aktivitas = $(this).closest('tr').data('aktivitas-id');
-                var tanggal = $('#date_activity').val();  // Perubahan di sini
-                var jenis_aktivitas = $('#jenis_activity').val();  // Perubahan di sini
-                var status_aktivitas = $('#status_activity').val();
-                var total_pengeluaran = $('#pengeluaran_activity').val();  // Perubahan di sini
-                var keterangan = $('#keterangan_pengeluaran').val();  // Perubahan di sini
+    $('button[data-bs-toggle="modal"]').on('click', function () {
+        console.log("mencet modal")
+        $('#btnSubmit').on('click', function () {
+            console.log("mencet tombol")
+            var id_pengeluaran = $(this).closest('tr').data('pengeluaran-id');
+            var id_aktivitas = $(this).closest('tr').data('aktivitas-id');
+            var tanggal = $('#date_activity').val();  // Perubahan di sini
+            var jenis_aktivitas = $('#jenis_activity').val();  // Perubahan di sini
+            var status_aktivitas = $('#status_activity').val();
+            var total_pengeluaran = $('#pengeluaran_activity').val();  // Perubahan di sini
+            var keterangan = $('#keterangan_pengeluaran').val();  // Perubahan di sini
 
-                var data = {
-                    'id_pengeluaran': id_pengeluaran,
-                    'id_aktivitas': id_aktivitas,
-                    'tanggal': tanggal,
-                    'jenis_aktivitas': jenis_aktivitas,
-                    'status_aktivitas': status_aktivitas,
-                    'total_pengeluaran': total_pengeluaran,
-                    'keterangan': keterangan
-                };
+            var data = {
+                'id_pengeluaran': id_pengeluaran,
+                'id_aktivitas': id_aktivitas,
+                'tanggal': tanggal,
+                'jenis_aktivitas': jenis_aktivitas,
+                'status_aktivitas': status_aktivitas,
+                'total_pengeluaran': total_pengeluaran,
+                'keterangan': keterangan
+            };
 
-                fetch('/update_activity', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
+            console.log(data)
+
+            fetch('/update_activity', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Close the modal or perform other actions
+                    $('#ModalEditActivity').modal('hide');
+                    location.reload()
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        // Close the modal or perform other actions
-                        $('#ModalEditActivity').modal('hide');
-                        location.reload()
-                    })
-                    .catch(error => {
-                        // Handle errors
-                        console.error('Error:', error);
-                    });
-            });
+                .catch(error => {
+                    // Handle errors
+                    console.error('Error:', error);
+                });
         });
     });
 </script>
