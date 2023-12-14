@@ -6,7 +6,7 @@ from models import *
 from flask_wtf import FlaskForm
 from flask_wtf.csrf import CSRFProtect
 from sqlalchemy import func, cast, Integer
-from icecream import ic
+# from icecream import ic
 
 class Controller_Application:
     def __init__(self):
@@ -177,11 +177,8 @@ class Controller_Application:
         def update_lahan():
             data = request.json
             lahan_id = data['id_lahan']
-            ic(lahan_id)
-            ic(data)
             
             data_lahan = Lahan.query.get(lahan_id)
-            ic(data_lahan)
             if data_lahan.user_id == current_user.id:
                 data_lahan.nama = data['nama_lahan']
                 data_lahan.luas = data['luas_lahan']

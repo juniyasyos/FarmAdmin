@@ -54,11 +54,9 @@ CREATE TABLE `Lahan` (
   `user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
 --
 -- Table structure for table `Pendapatan`
 --
-
 CREATE TABLE `Pendapatan` (
   `id` int(11) NOT NULL,
   `tanggal` date DEFAULT NULL,
@@ -69,6 +67,9 @@ CREATE TABLE `Pendapatan` (
   `hasil_panen_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Table structure for table `Pengeluaran`
+--
 CREATE TABLE `Pengeluaran` (
   `id` int(11) NOT NULL,
   `tanggal` date NOT NULL,
@@ -78,6 +79,9 @@ CREATE TABLE `Pengeluaran` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
+--
+-- Table structure for table `User`
+--
 CREATE TABLE `User` (
   `id` int(11) NOT NULL,
   `email` varchar(30) NOT NULL,
