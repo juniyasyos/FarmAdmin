@@ -110,7 +110,7 @@ class PengeluaranForm(FlaskForm):
         ('penelitian-pengembangan', 'Penelitian dan Pengembangan'),
         ('pengelolaan-sumber-daya', 'Pengelolaan Sumber Daya Alam'),
         ('pendidikan-pertanian', 'Pendidikan Pertanian'),
-        ('pengelolaan-limbah', 'Pengelolaan Limbah Pertanian'),
+        ('pengelolaan-limbah', 'Pengelolaan Limbah Pertanian')
     )
     
 
